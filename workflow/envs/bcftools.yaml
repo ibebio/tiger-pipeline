@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::bcftools =1.8
+  - bioconda::tabix =0.2.6

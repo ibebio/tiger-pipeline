@@ -1,0 +1,32 @@
+# The main entry point of your workflow.
+# After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
+
+
+# report: "report/workflow.rst"
+
+# Allow users to fix the underlying OS via singularity.
+singularity: "docker://continuumio/miniconda3"
+
+# localrules: index_filtered_bams
+
+include: "rules/common.smk"
+#include: "rules/other.smk"
+
+include: "rules/01_mapping.smk"
+include: "rules/02_variant_calling_parental.smk"
+include: "rules/03_prepare_marker_files.smk"
+include: "rules/04_variant_calling_f2.smk"
+include: "rules/05_prepare_f2_tiger_input.smk"
+include: "rules/06_run_tiger.smk"
+include: "rules/07_make_tiger_output.smk"
+
+
+
+rule all:
+    input:
+        "results/variants/parental/biallelic_snps_corrected/biallelic_snps_corrected.done",
+        expand("results/tiger_analysis/F2.{crossing_id}/{crossing_id}.breaks_paths.txt",
+               crossing_id=[c["id"] for c in config["crossings"]]),
+
+# The first rule should define the default target files
+# Subsequent target rules can be specified below. They should start with all_*.

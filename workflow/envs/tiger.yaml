@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - openjdk >8,<9
+  - perl =5.26.2

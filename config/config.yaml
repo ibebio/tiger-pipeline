@@ -1,0 +1,58 @@
+# This file should contain everything to configure the workflow on a global scale.
+# In case of sample based data, it should be complemented by a samples.tsv file that contains
+# one row per sample. It can be parsed easily via pandas.
+# All samples, including parental lines and F2
+samples: "config/samples.csv"
+
+# Crossings and their parents
+# Should be the ID of the cross, and the 2 parents.
+# Their IDs must correspond to the sample names given the samples file above.
+# *The order is important*: parent A (ref) has Col-0 allele, and parent B (alt) has alternative allele
+crossings:
+  - id: "14-1"
+    parent_ref: "9821-14-R04"
+    parent_alt: "9925-03-R03"
+    f2_samples:
+        - "F2-14-1-153"
+        - "F2-14-1-197"
+
+# Read group settings, no need to change this
+read_group:
+  platform: "ILLUMINA"
+  library: "1"
+
+# Reference genome
+ref:
+  name: "TAIR-10"
+  genome: "/ebio/abt6_projects8/ath_somaclonal_variation/data/reference_genomes/Col-0/TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
+
+
+# Trimming parameters
+read_trimming:
+  adapter: "CTGTCTCTTATA" # NEXTERA
+
+  
+# Parental Variant calling parameters
+variant_calling_parental:
+  threads: 10
+  java_options: "-Xmx24g -Xms24g"
+
+# Hard variant filtering parameters
+# The filtering is performed individually for SNPs and Indels.
+#
+# snps/indels_complete filter is for the generation of complete marker files.
+# The filter is not strict, and the resulting VCFs can be used for other purposes, hence the indels are also kept.
+# snps_indels_corrected_filter is more strict and is used for generation of corrected marker files.
+# The indels are removed, therefore it is not required to create a separate filter for them.
+variant_filtering_parental:
+  snps_complete_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
+  indels_complete_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
+  snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
+  # indels_hard_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
+  te_bed_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_Transposable_Elements_BED.bed"
+
+
+# Settings for the TIGER pipeline
+tiger:
+  scripts_dir: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/"
+  chromosome_size_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_chrSize.txt"
