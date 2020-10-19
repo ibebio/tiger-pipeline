@@ -7,7 +7,7 @@
 # Allow users to fix the underlying OS via singularity.
 singularity: "docker://continuumio/miniconda3"
 
-# localrules: index_filtered_bams
+localrules: all
 
 include: "rules/common.smk"
 #include: "rules/other.smk"

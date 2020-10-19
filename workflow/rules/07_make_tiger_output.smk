@@ -1,3 +1,5 @@
+localrules: tiger_create_path_file
+
 rule tiger_create_path_file:
     input:
         corrected_refined_breaks_files=get_corrected_refined_breaks_files # TODO create this fct
@@ -16,8 +18,8 @@ rule tiger_create_path_file:
         """
         if [[ -f {output.breaks_summary} ]] ; then \
           rm {output.breaks_summary} ; \
-        fi \ ;
-        for $FILE in {input.corrected_refined_breaks_files} ; do \
+        fi ; \
+        for FILE in {input.corrected_refined_breaks_files} ; do \
           echo $FILE >> {output.breaks_summary} ; \
         done
         """

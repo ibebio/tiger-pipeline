@@ -6,9 +6,9 @@ rule call_variants_parental:
     params:
         index=config["ref"]["genome"],
         java_options=config["variant_calling_parental"]["java_options"],
-    threads: 10
+    threads: 4
     resources:
-        n=10,
+        n=4,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
         mem_gb_pt=lambda wildcards, attempt: 12 * attempt
     log:
@@ -58,7 +58,7 @@ rule filter_variants_parental_complete:
              -V {output.snps} \
              --filter-name "snps-hard-filter" \
              --filter-expression "{params.snp_filter}" \
-             -O {output.filtered_snps}
+             -O {output.filtered_snps} \
         ; \
         gatk SelectVariants \
              -R {params.index} \

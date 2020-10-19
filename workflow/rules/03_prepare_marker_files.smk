@@ -2,6 +2,8 @@
 # CREATE COMPLETE MARKER FILES
 ############################################################
 
+localrules: create_complete_markers, create_corrected_markers, create_marker_all
+
 # Extract biallelic SNPs
 rule extract_biallelic_snps_parental_complete:
     input:
@@ -51,7 +53,7 @@ rule create_complete_markers:
         """
         SnpSift extractFields \
             {input.vcf} \
-            CHROM POS > {output.marker_file} 2> {log}"
+            CHROM POS > {output.marker_file} 2> {log}
         """
 
         
@@ -107,7 +109,6 @@ rule create_marker_all:
 rule intersect_parental_lines:
     input:
         parental_vcfs_done="results/variants/parental/biallelic_snps_corrected/biallelic_snps_corrected.done",
-        
     output:
         bgzip_parent_ref_vcf=temp("results/variants/parental/isec_parent_lines/{crossing_id}.parent_ref.vcf.gz"),
         bgzip_parent_alt_vcf=temp("results/variants/parental/isec_parent_lines/{crossing_id}.parent_alt.vcf.gz"),
@@ -130,7 +131,9 @@ rule intersect_parental_lines:
     shell:
         """
         bgzip -c {params.parent_ref_vcf} > {output.bgzip_parent_ref_vcf} 2> {log} ;\
+        bcftools index {output.bgzip_parent_ref_vcf} 2> {log} \;
         bgzip -c {params.parent_alt_vcf} > {output.bgzip_parent_alt_vcf} 2> {log} ;\
+        bcftools index {output.bgzip_parent_alt_vcf} ;\
         \
         bcftools isec \
             -Ov {output.bgzip_parent_ref_vcf} {output.bgzip_parent_alt_vcf} -p {output.isec_output_dir} ;\
@@ -180,5 +183,5 @@ rule create_corrected_markers:
         """
         SnpSift extractFields \
             {input.vcf} \
-            CHROM POS > {output.marker_file} 2> {log}"
+            CHROM POS > {output.marker_file} 2> {log}
         """

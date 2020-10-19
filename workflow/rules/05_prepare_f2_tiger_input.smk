@@ -31,6 +31,8 @@
 #           {params.sample_name}
 #         """
 
+localrules: prepare_corrected_inputs_f2, prepare_corrected_inputs_f2_all
+
 rule prepare_corrected_inputs_f2:
     input:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.tabbed.txt",
@@ -53,7 +55,7 @@ rule prepare_corrected_inputs_f2:
         "../envs/global.yaml"
     shell:
         """
-	../scripts/prepare_tiger_inputs_f2.sh \
+	workflow/scripts/prepare_tiger_inputs_f2.sh \
 	  {params.tiger_scripts_dir} \
 	  {output.work_dir} \
           {input.tab} \

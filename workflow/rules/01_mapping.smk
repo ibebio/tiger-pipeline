@@ -13,11 +13,11 @@ rule trim_reads:
         fq2=temp("results/trimmed/{sample}.R2.trimmed.fastq.gz"),
     params:
         adapter=config["read_trimming"]["adapter"]
-    threads: 8
+    threads: 1
     resources:
-        n=8,
+        n=1,
         time=lambda wildcards, attempt: 2 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 1 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 4 * attempt,
     log:
         "results/logs/trim_reads/{sample}.log"
     conda:

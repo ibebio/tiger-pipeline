@@ -1,8 +1,8 @@
 #!/bin/bash
-
+set -xv
 # Prepare input files for the TIGER pipeline
 TIGER_SCRIPTS_DIR=$1
-WORK_DIR=$2
+WORKDIR=$2
 TAB_FILE=$3
 MARKER_FILE_COMPLETE=$4
 MARKER_FILE_CORRECTED=$5
@@ -10,6 +10,7 @@ COMPLETE_FILE=$6
 CORRECTED_FILE=$7
 SAMPLE_NAME=$8
 
+mkdir -p ${WORKDIR}
 
 #get rid of mito and cp reads; create columns for read counts for ref allele and alt allele
 # chr pos ref ref_count alt alt_count
