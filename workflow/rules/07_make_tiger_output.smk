@@ -49,7 +49,7 @@ rule tiger_create_path_file:
 #         done
 #         """
 
-
+# TODO Check whats the problem was with this
 # R --slave --vanilla --args \
 #     TEST \
 #     TEST.pdf \
@@ -58,5 +58,3 @@ rule tiger_create_path_file:
 #     F2-16-1-004.corrected.refined.breaks.txt \
 #     F2-16-1-004.input.corrected.frequencies_bmm.txt \
 #     F2-16-1-004_sliding_window.breaks.txt < /ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/plot_genotyping.R
-
-

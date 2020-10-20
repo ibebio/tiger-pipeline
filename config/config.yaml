@@ -32,7 +32,7 @@ read_trimming:
   adapter: "CTGTCTCTTATA" # NEXTERA
 
   
-# Parental Variant calling parameters
+# Parental Variant calling parameters, no need to change this normally
 variant_calling_parental:
   threads: 10
   java_options: "-Xmx24g -Xms24g"
@@ -48,7 +48,6 @@ variant_filtering_parental:
   snps_complete_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
   indels_complete_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
   snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
-  # indels_hard_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
   te_bed_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_Transposable_Elements_BED.bed"
 
 

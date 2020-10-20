@@ -3,6 +3,7 @@
 # FOR _ALL_ SAMPLES INVOLVED, PARENTAL AND F2
 ############################################################
 
+localrules: map_all
 
 # Trim reads (PE-only)
 rule trim_reads:

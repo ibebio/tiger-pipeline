@@ -105,7 +105,6 @@ rule tiger_prepare_hmm:
 rule tiger_calc_transmission_emission_prob:
     input:
         basecall="results/tiger_analysis/F2.{crossing_id}/basecalling/{f2_sample}.input.corrected.basecall.txt",
-        tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected",
         frequencies="results/tiger_analysis/F2.{crossing_id}/allele_frequencies/{f2_sample}.input.corrected.frequencies_bmm.txt",
         bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt",
         hmm_prob="results/tiger_analysis/F2.{crossing_id}/hmm_probabilities/{f2_sample}.hmm_probabilities.txt"
@@ -126,7 +125,7 @@ rule tiger_calc_transmission_emission_prob:
     shell:
         """
         perl {params.tiger_scripts_dir}/hmm_prob_2.pl \
-          -s {input.tig_in_corrected} \
+          -s {input.frequencies} \
           -p {input.hmm_prob} \
           -o {params.prefix} \
           -a {input.bmm} \

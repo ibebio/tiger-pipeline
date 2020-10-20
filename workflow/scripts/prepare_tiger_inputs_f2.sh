@@ -27,4 +27,3 @@ cat ${WORKDIR}/${SAMPLE_NAME}.input.complete.temp | awk '{ if (($4 != ".") && ($
 cat ${WORKDIR}/${SAMPLE_NAME}.input.corrected.temp | awk '{ if (($4 != ".") && ($4 ~ /^[0-9]*$/) && (length($3)==1) && (length($5)==1)) { print $0}}' | sed 's/\./0/g' > ${CORRECTED_FILE}
 
 # TODO gzip ${TAB_FILE}
-

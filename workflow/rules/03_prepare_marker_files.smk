@@ -27,6 +27,7 @@ rule extract_biallelic_snps_parental_complete:
         gatk SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
+             --exclude-filtered \
              --select-type-to-include SNP \
              --select-type-to-exclude INDEL \
              --restrict-alleles-to BIALLELIC \
@@ -84,6 +85,7 @@ rule extract_biallelic_snps_parental_corrected:
         gatk SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
+             --exclude-filtered \
              --select-type-to-include SNP \
              --select-type-to-exclude INDEL \
              --restrict-alleles-to BIALLELIC \

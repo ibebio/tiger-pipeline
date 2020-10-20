@@ -1,5 +1,11 @@
 # Snakemake workflow: TIGER analysis pipeline
 
+
+TODO: https://github.com/betharowan/TIGER_Scripts-for-distribution
+- Add as sub-repository
+- Check diffs with Ulis directory
+- Add patches
+
 [![Snakemake](https://img.shields.io/badge/snakemake-≥5.21.0-brightgreen.svg)](https://snakemake.bitbucket.io)
 [![Build Status](https://travis-ci.org/snakemake-workflows/tiger_analysis_pipeline.svg?branch=master)](https://travis-ci.org/snakemake-workflows/tiger_analysis_pipeline)
 
@@ -24,6 +30,11 @@ If you use this workflow in a paper, don't forget to give credits to the authors
 
 Configure the workflow according to your needs via editing the files in the `config/` folder. Adjust `config.yaml` to configure the workflow execution, and `samples.csv` to specify your sample setup.
 
+Run the following command  to make the required scripts executable:
+```
+$ chmod u+x workflow/scripts/*.sh
+```
+
 ### Step 3: Install Snakemake
 
 Install Snakemake using [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html):
@@ -41,7 +52,7 @@ For the Weigel lab, set up your SGE cluster profile as follows:
 $ git clone https://github.com/ibebio/snakemake_profiles.git
 $ cd snakemake_profiles
 $ mkdir -p ~/.config/snakemake/
-$ chmod u+x sge/*.py 
+$ chmod u+x sge/*.py
 $ cp -r sge ~/.config/snakemake/
 ```
 

@@ -23,7 +23,7 @@ rule call_variants_parental:
             -O {output.vcf} 2> {log}
         """
 
-        
+
 rule filter_variants_parental_complete:
     input:
         vcf="results/variants/parental/raw/{parental_sample}.vcf",
