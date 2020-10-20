@@ -1,10 +1,6 @@
 # Snakemake workflow: TIGER analysis pipeline
 
 
-TODO: https://github.com/betharowan/TIGER_Scripts-for-distribution
-- Add as sub-repository
-- Check diffs with Ulis directory
-- Add patches
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥5.21.0-brightgreen.svg)](https://snakemake.bitbucket.io)
 [![Build Status](https://travis-ci.org/snakemake-workflows/tiger_analysis_pipeline.svg?branch=master)](https://travis-ci.org/snakemake-workflows/tiger_analysis_pipeline)
@@ -25,14 +21,20 @@ If you use this workflow in a paper, don't forget to give credits to the authors
 <!--
 1. Create a new github repository using this workflow [as a template](https://help.github.com/en/articles/creating-a-repository-from-a-template).
 2. [Clone](https://help.github.com/en/articles/cloning-a-repository) the newly created repository to your local system, into the place where you want to perform the data analysis.
+
 -->
+Clone the repository into the place where you want to perform the data analysis. It is important to include the submodules:
+```
+git clone --recursive https://github.com/ibebio/tiger-pipeline.git
+```
+
 ### Step 2: Configure workflow
 
 Configure the workflow according to your needs via editing the files in the `config/` folder. Adjust `config.yaml` to configure the workflow execution, and `samples.csv` to specify your sample setup.
 
 Run the following command  to make the required scripts executable:
 ```
-$ chmod u+x workflow/scripts/*.sh
+$ chmod u+x workflow/scripts/*.*
 ```
 
 ### Step 3: Install Snakemake
