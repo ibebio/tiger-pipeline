@@ -25,8 +25,10 @@ include: "rules/07_make_tiger_output.smk"
 rule all:
     input:
         "results/variants/parental/biallelic_snps_corrected/biallelic_snps_corrected.done",
-        expand("results/tiger_analysis/F2.{crossing_id}/{crossing_id}.breaks_paths.txt",
+        expand("results/tables/rqtl/{crossing_id}.rqtl.csv",
                crossing_id=[c["id"] for c in config["crossings"]]),
+        expand("results/plots/{crossing_id}.done",
+               crossing_id=[c["id"] for c in config["crossings"]])
 
 # The first rule should define the default target files
 # Subsequent target rules can be specified below. They should start with all_*.

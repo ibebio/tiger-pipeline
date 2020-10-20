@@ -109,7 +109,8 @@ rule tiger_calc_transmission_emission_prob:
         bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt",
         hmm_prob="results/tiger_analysis/F2.{crossing_id}/hmm_probabilities/{f2_sample}.hmm_probabilities.txt"
     output:
-        hmm_model="results/tiger_analysis/F2.{crossing_id}/hmm_model/{f2_sample}_hmm_model"
+        hmm_model="results/tiger_analysis/F2.{crossing_id}/hmm_model/{f2_sample}_hmm_model",
+        sliding_window_breaks="results/tiger_analysis/F2.{crossing_id}/hmm_model/{f2_sample}_sliding_window.breaks.txt"
     params:
         tiger_scripts_dir=config["tiger"]["scripts_dir"],
         tiger_chrom_size_file=config["tiger"]["chromosome_size_file"],
@@ -124,7 +125,7 @@ rule tiger_calc_transmission_emission_prob:
         "../envs/tiger.yaml"
     shell:
         """
-        perl {params.tiger_scripts_dir}/hmm_prob_2.pl \
+        perl {params.tiger_scripts_dir}/hmm_prob.pl \
           -s {input.frequencies} \
           -p {input.hmm_prob} \
           -o {params.prefix} \

@@ -53,5 +53,5 @@ variant_filtering_parental:
 
 # Settings for the TIGER pipeline
 tiger:
-  scripts_dir: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/"
+  scripts_dir: "workflow/TIGER_Scripts-for-distribution"
   chromosome_size_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_chrSize.txt"
