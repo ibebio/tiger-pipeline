@@ -1,4 +1,4 @@
-localrules: tiger_create_genotype_plots, tiger_create_path_file, tiger_create_rqtl_input
+localrules: tiger_create_genotype_plot, tiger_create_genotype_plots, tiger_create_path_file, tiger_create_rqtl_input
 
 
 rule tiger_create_genotype_plot:
@@ -75,7 +75,7 @@ rule tiger_create_rqtl_input:
            --output {output.rqtl_csv} 2> {log}
         """
     
-rule tiger_create_genotype_plots_all:
+rule tiger_create_genotype_plots:
     input:
         plots=get_plot_files_for_crossing_id
     output:
