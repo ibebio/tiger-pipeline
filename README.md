@@ -15,8 +15,9 @@ Insert your code into the respective folders, i.e. `scripts`, `rules`, and `envs
 
 ## Usage
 
-If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) repository and, if available, its DOI (see above).
-
+<!-- If you use this workflow in a paper, don't forget to give credits to the authors by citing the URL of this (original) repository and, if available, its DOI (see above). -->
+If you use this workflow in a paper, don't forget to give credits to the authors of this pipeline and the authors of the 'GBS with sparse coverage using Trained Individual
+GenomE Reconstruction (TIGER)' workflow: https://www.g3journal.org/content/5/3/385.short
 ### Step 1: Obtain a copy of this workflow
 <!--
 1. Create a new github repository using this workflow [as a template](https://help.github.com/en/articles/creating-a-repository-from-a-template).
