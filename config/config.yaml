@@ -48,10 +48,10 @@ variant_filtering_parental:
   snps_complete_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
   indels_complete_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
   snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
-  te_bed_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_Transposable_Elements_BED.bed"
+  te_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed"
 
 
 # Settings for the TIGER pipeline
 tiger:
   scripts_dir: "workflow/TIGER_Scripts-for-distribution"
-  chromosome_size_file: "/ebio/abt6_projects9/At_dFLC/code/TIGER_scripts/TAIR10_chrSize.txt"
+  chromosome_size_file: "resources/TAIR10_chrSize.txt"
