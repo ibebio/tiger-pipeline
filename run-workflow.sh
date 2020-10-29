@@ -40,7 +40,6 @@ if [[ ! -d ${PIPELINE_DIR}/conda/ ]] ; then
 fi
 
 # Run the workflow
-
 if [[ "${SNAKEMAKE_PROFILE}" == "sge" ]] ; then
     snakemake \
 	--local-cores ${LOCAL_CORES} \
@@ -54,4 +53,3 @@ else
 	--use-conda \
 	${SNAKEMAKE_ARGS}
 fi
-

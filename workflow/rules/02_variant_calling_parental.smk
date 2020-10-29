@@ -1,3 +1,4 @@
+localrules: estimate_filtering_params_parental_corrected
 rule call_variants_parental:
     input:
         bam="results/rmdup/{parental_sample}.rmdup.bam"
@@ -80,14 +81,52 @@ rule filter_variants_parental_complete:
         """
 
 
+rule estimate_filtering_params_parental_corrected:
+    input:
+        vcf=get_parental_raw_variants_all # TODO make the filtering per crossing
+    output:
+        filter_file="results/variants/parental/snps_indels_corrected_filter.txt",
+        plot="results/plots/parental_filtering.png"
+    params:
+        snp_indel_filter=config["variant_filtering_parental"]["snps_indels_corrected_filter"],
+        plot_prefix="results/plots/parental_filtering_tmp"
+    resources:
+        n=1,
+        time=lambda wildcards, attempt: 12 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+    log:
+        "results/logs/estimate_filtering_params_parental_corrected.log"
+    conda:
+        "../envs/estimate_filtering_params.yaml"
+    shell:
+        """
+        # Prepare input args
+        INPUTARGS=$(echo " {input.vcf}" | sed 's/ / --vcf /g')
+        # Estimate filtering parameters
+        env python workflow/scripts/estimate_parental_filtering_params.py \
+            $INPUTARGS \
+            --filter_file {output.filter_file} \
+            --plot {params.plot_prefix} 2> {log}
+
+        if [[ "{params.snp_indel_filter}" != "auto" ]] ; then
+          # Use hard-coded filtering, overwrite filter_file
+          echo "{params.snp_indel_filter}" > {output.filter_file}
+        fi
+
+        montage {params.plot_prefix}*.png -geometry +0+0 -title "$(cat {output.filter_file})" {output.plot} 2>> {log}
+        rm {params.plot_prefix}*.png
+        """
+
+
+
 rule filter_variants_parental_corrected:
     input:
         vcf="results/variants/parental/raw/{parental_sample}.vcf",
+        filter_file="results/variants/parental/snps_indels_corrected_filter.txt",
     output:
         filtered_vcf="results/variants/parental/filtered_corrected/{parental_sample}.vcf",
     params:
         index=config["ref"]["genome"],
-        snp_indel_filter=config["variant_filtering_parental"]["snps_indels_corrected_filter"]
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
@@ -102,6 +141,6 @@ rule filter_variants_parental_corrected:
              -R {params.index} \
              -V {input.vcf} \
              --filter-name "snps-indels-complete-filter" \
-             --filter-expression "{params.snp_indel_filter}" \
-             -O {output.filtered_vcf} \
+             --filter-expression "$(cat {input.filter_file})" \
+             -O {output.filtered_vcf} 2> {log}
         """

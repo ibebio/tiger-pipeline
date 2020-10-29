@@ -28,8 +28,8 @@ rule create_tab_and_gzip_f2:
     input:
         vcf="results/variants/f2/monomorphic/{crossing_id}.{f2_sample}.monomorphic.vcf"
     output:
-        vcf="results/variants/f2/monomorphic/{crossing_id}.{f2_sample}.monomorphic.vcf.gz",
-        tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.tabbed.txt",
+        vcf=temp("results/variants/f2/monomorphic/{crossing_id}.{f2_sample}.monomorphic.vcf.gz"),
+        tab=temp("results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.tabbed.txt")
     params:
     resources:
         n=1,

@@ -38,6 +38,18 @@ def get_all_mapped_files(wildcards):
     return mapped_files
 
 
+def get_parental_raw_variants_all(wildcards):
+    """ return the names of all raw parental variants """
+    mapped_files = []
+    for c in config["crossings"]:
+        mapped_files.append(
+            "results/variants/parental/raw/{}.vcf".format(c["parent_ref"]))
+        mapped_files.append(
+            "results/variants/parental/raw/{}.vcf".format(c["parent_alt"]))
+    return mapped_files
+
+
+
 def get_parental_biallelic_snps_corrected_all(wildcards):
     """ return the names of all rmdup files (output of 01_mapping.smk) """
     mapped_files = []

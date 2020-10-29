@@ -42,12 +42,18 @@ variant_calling_parental:
 #
 # snps/indels_complete filter is for the generation of complete marker files.
 # The filter is not strict, and the resulting VCFs can be used for other purposes, hence the indels are also kept.
+#
 # snps_indels_corrected_filter is more strict and is used for generation of corrected marker files.
+# The default option for it is "auto", where the cut-offs are determined from the distributions of the
+# fields.
 # The indels are removed, therefore it is not required to create a separate filter for them.
+
 variant_filtering_parental:
   snps_complete_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
   indels_complete_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
-  snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
+  snps_indels_corrected_filter: "auto"
+  # Comment the above line and uncomment the one below for use of a hard-coded strict filter
+  # snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
   te_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed"
 
 
