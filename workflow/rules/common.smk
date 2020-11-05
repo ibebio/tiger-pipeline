@@ -103,7 +103,7 @@ def get_corrected_refined_breaks_files(wildcards):
     f2_sample_names = [c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id]
     assert len(f2_sample_names) == 1
     f2_sample_names = f2_sample_names[0]
-    corrected_refined_breaks_files = ["{basedir}/../results/tiger_analysis/F2.{crossing_id}/rough_co_breaks_refined_corrected/{f2_sample}.corrected.refined.breaks.txt".format(basedir=workflow.basedir, f2_sample=f2_sample, crossing_id=wildcards.crossing_id) for f2_sample in f2_sample_names]
+    corrected_refined_breaks_files = ["results/tiger_analysis/F2.{crossing_id}/rough_co_breaks_refined_corrected/{f2_sample}.corrected.refined.breaks.txt".format(basedir=workflow.basedir, f2_sample=f2_sample, crossing_id=wildcards.crossing_id) for f2_sample in f2_sample_names]
     return corrected_refined_breaks_files
 
 
