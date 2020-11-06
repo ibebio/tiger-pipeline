@@ -18,7 +18,7 @@ rule trim_reads:
     resources:
         n=1,
         time=lambda wildcards, attempt: 2 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 4 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
     log:
         "results/logs/trim_reads/{sample}.log"
     conda:
