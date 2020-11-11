@@ -9,7 +9,7 @@ rule call_variants_f2:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 24 * attempt
     log:
         "results/logs/call_variants_f2/{crossing_id}.{f2_sample}.log"
     conda:
@@ -34,7 +34,7 @@ rule create_tab_and_gzip_f2:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 24 * attempt
     log:
         "results/logs/call_variants_f2/{crossing_id}.{f2_sample}.log"
     conda:
