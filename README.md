@@ -52,11 +52,11 @@ For installation details, see the [instructions in the Snakemake documentation](
 For the Weigel lab, set up your SGE cluster profile as follows:
 
 ```
-$ git clone https://github.com/ibebio/snakemake_profiles.git
-$ cd snakemake_profiles
-$ mkdir -p ~/.config/snakemake/
-$ chmod u+x sge/*.py
-$ cp -r sge ~/.config/snakemake/
+git clone https://github.com/ibebio/snakemake_profiles.git
+cd snakemake_profiles
+mkdir -p ~/.config/snakemake/
+chmod u+x sge/*.py
+cp -r sge ~/.config/snakemake/
 ```
 
 Activate the conda environment:
@@ -65,8 +65,31 @@ Activate the conda environment:
 
 Test your configuration by performing a dry-run via
 
-    snakemake --use-conda -n
+    snakemake -n
 
+
+A helper script `run-workflow.sh`, is included to conveniently run the
+workflow, either locally or on the cluster:
+
+	./run-workflow.sh sge
+
+would run the pipeline on the SGE cluster, as set up previously.
+
+	./run-workflow.sh local
+
+would run it on the local maschine.
+
+To customize how many cores and jobs are used, you can either modify
+the `run-workflow.sh` script or run the commands required to run the
+workflow by hand, as described below.
+
+To clean up all output files and conda environments to rerun the workflow from
+scratch, the helper script `clean-all.sh` is included.
+
+
+
+
+##### Run the workflow with custom settings
 Execute the workflow locally via
 
     snakemake --use-conda --cores $N
@@ -82,12 +105,9 @@ Then, run the workflow via
 
     snakemake --use-conda --profile sge --jobs 100
 
-The helper script `run-workflow.sh`, which is included in the root directory
-of the workflow, can be used to run both of the above commands with the 
-corresponding parameters.
+The number of jobs can be adjusted as required. Additional arguments
+for Snakemake can also be supplied.
 
-To clean up all output files and conda environments to rerun the workflow from
-scratch, the helper script `clean-all.sh` is included.
 
 <!-- If you not only want to fix the software stack but also the underlying OS, use
 
