@@ -103,7 +103,14 @@ def get_corrected_refined_breaks_files(wildcards):
     f2_sample_names = [c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id]
     assert len(f2_sample_names) == 1
     f2_sample_names = f2_sample_names[0]
-    corrected_refined_breaks_files = ["results/tiger_analysis/F2.{crossing_id}/rough_co_breaks_refined_corrected/{f2_sample}.corrected.refined.breaks.txt".format(basedir=workflow.basedir, f2_sample=f2_sample, crossing_id=wildcards.crossing_id) for f2_sample in f2_sample_names]
+    corrected_refined_breaks_files = []
+    for f2_sample in f2_sample_names:
+        with checkpoints.tiger_beta_mixture_model.get(f2_sample=f2_sample, crossing_id=wildcards.crossing_id).output[0].open() as f:
+            # Was the beta mixture model successfully generated?
+            if f.read().strip() == "0":
+                corrected_refined_breaks_files.append(
+                    "results/tiger_analysis/F2.{crossing_id}/rough_co_breaks_refined_corrected/{f2_sample}.corrected.refined.breaks.txt".format(basedir=workflow.basedir, f2_sample=f2_sample, crossing_id=wildcards.crossing_id)
+                    )
     return corrected_refined_breaks_files
 
 
@@ -112,5 +119,13 @@ def get_plot_files_for_crossing_id(wildcards):
     f2_sample_names = [c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id]
     assert len(f2_sample_names) == 1
     f2_sample_names = f2_sample_names[0]
-    plot_files = ["results/plots/F2.{crossing_id}/{f2_sample}.pdf".format(crossing_id=wildcards.crossing_id, f2_sample=f2_sample) for f2_sample in f2_sample_names]
+
+    plot_files = []
+    for f2_sample in f2_sample_names:
+        with checkpoints.tiger_beta_mixture_model.get(f2_sample=f2_sample, crossing_id=wildcards.crossing_id).output[0].open() as f:
+            # Was the beta mixture model successfully generated?
+            if f.read().strip() == "0":
+                plot_files.append(
+                    "results/plots/F2.{crossing_id}/{f2_sample}.pdf".format(crossing_id=wildcards.crossing_id, f2_sample=f2_sample)
+                )
     return plot_files

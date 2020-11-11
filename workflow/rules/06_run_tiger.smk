@@ -47,13 +47,14 @@ rule tiger_allele_freq_estimator:
         """
 
 
-rule tiger_beta_mixture_model:
+checkpoint tiger_beta_mixture_model:
     input:
         frequencies="results/tiger_analysis/F2.{crossing_id}/allele_frequencies/{f2_sample}.input.corrected.frequencies_bmm.txt"
     output:
-        bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt"
+        bmm_run_done="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt.done"
     params:
         tiger_scripts_dir=config["tiger"]["scripts_dir"],
+        bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt"
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
@@ -64,9 +65,12 @@ rule tiger_beta_mixture_model:
         "../envs/r.yaml"
     shell:
         """
+        set +e
         Rscript --vanilla {params.tiger_scripts_dir}/beta_mixture_model.R \
           {input.frequencies} \
-          {output.bmm}
+          {params.bmm}
+        exitcode=$?
+        echo $exitcode > {output.bmm_run_done}
         """
 
         
