@@ -1,3 +1,5 @@
+localrules: tiger_basecaller, tiger_allele_freq_estimator, tiger_beta_mixture_model, tiger_prepare_hmm, tiger_calc_transmission_emission_prob, tiger_run_hmm, tiger_estimate_recombination_breakpoints, tiger_refine_recombination_breakpoints, tiger_smooth_out_breaks
+
 rule tiger_basecaller:
     input:
         tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected",
