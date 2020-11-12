@@ -22,6 +22,7 @@ rule tiger_create_genotype_plot:
     shell:
         """
         # TODO Check whats the problem was with this
+        set +e
         R --slave --vanilla --args \
         {params.sample} \
         {output.plot} \
@@ -29,7 +30,9 @@ rule tiger_create_genotype_plot:
         {input.rough_co_breaks} \
         {input.breaks_refined_corrected} \
         {input.frequencies} \
-        {input.sliding_window_breaks} < {params.tiger_scripts_dir}/plot_genotyping.R
+        {input.sliding_window_breaks} < {params.tiger_scripts_dir}/plot_genotyping.R 2> {log}
+
+        echo "Ignoring failures" 2> {log}
         """
 
 rule tiger_create_path_file:
