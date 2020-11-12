@@ -8,8 +8,8 @@ rule call_variants_f2:
         index=config["ref"]["genome"],
     resources:
         n=1,
-        time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 24 * attempt
+        time=lambda wildcards, attempt: 24 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 30 * attempt
     log:
         "results/logs/call_variants_f2/{crossing_id}.{f2_sample}.log"
     conda:
