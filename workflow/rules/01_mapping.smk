@@ -18,7 +18,7 @@ rule trim_reads:
     resources:
         n=1,
         time=lambda wildcards, attempt: 2 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 24 * attempt,
     log:
         "results/logs/trim_reads/{sample}.log"
     conda:
@@ -50,7 +50,7 @@ rule map_to_reference:
     resources:
         n=10,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 2 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 4 * attempt,
     log:
         "results/logs/map_to_reference/{sample}.log"
     conda:
@@ -68,7 +68,7 @@ rule remove_duplicates:
         metrics="results/rmdup/{sample}/metrics.txt"
     resources:
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 18 * attempt,
     log:
         "results/logs/remove_duplicates/{sample}.log"
     conda:
