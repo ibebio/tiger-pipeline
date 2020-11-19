@@ -45,11 +45,13 @@ if [[ "${SNAKEMAKE_PROFILE}" == "sge" ]] ; then
 	--local-cores ${LOCAL_CORES} \
 	--jobs ${JOBS} \
 	--use-conda \
+	--scheduler greedy \
 	--profile sge \
 	${SNAKEMAKE_ARGS}
 else
     snakemake \
 	--jobs ${LOCAL_CORES} \
+	--scheduler greedy \
 	--use-conda \
 	${SNAKEMAKE_ARGS}
 fi

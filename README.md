@@ -92,7 +92,7 @@ scratch, the helper script `clean-all.sh` is included.
 ##### Run the workflow with custom settings
 Execute the workflow locally via
 
-    snakemake --use-conda --cores $N
+    snakemake --use-conda --cores $N --scheduler greedy
 
 using `$N` cores. 
 
@@ -103,7 +103,7 @@ environments via
 
 Then, run the workflow via
 
-    snakemake --use-conda --profile sge --jobs 100
+    snakemake --use-conda --profile sge --jobs 100 --scheduler greedy
 
 The number of jobs can be adjusted as required. Additional arguments
 for Snakemake can also be supplied.
