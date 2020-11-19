@@ -21,10 +21,10 @@ include: "rules/06_run_tiger.smk"
 include: "rules/07_make_tiger_output.smk"
 
 
-
 rule all:
     input:
         "results/variants/parental/biallelic_snps_corrected/biallelic_snps_corrected.done",
+        "results/variants/tiger_analysis/prepare_tiger_inputs_f2.done",
         expand("results/tables/rqtl/{crossing_id}.rqtl.csv",
                crossing_id=[c["id"] for c in config["crossings"]]),
         expand("results/plots/{crossing_id}.done",

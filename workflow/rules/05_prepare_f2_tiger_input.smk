@@ -31,9 +31,9 @@
 #           {params.sample_name}
 #         """
 
-localrules: prepare_corrected_inputs_f2, prepare_corrected_inputs_f2_all
+localrules: prepare_tiger_inputs_f2, prepare_tiger_inputs_f2_all
 
-rule prepare_corrected_inputs_f2:
+rule prepare_tiger_inputs_f2:
     input:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.tabbed.txt",
 	marker_file_complete=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_ref"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
@@ -69,12 +69,10 @@ rule prepare_corrected_inputs_f2:
 
 
 # Aggregate rule
-rule prepare_corrected_inputs_f2_all:
+rule prepare_tiger_inputs_f2_all:
     input:
-        get_f2_biallelic_snps_corrected_all,
-        get_f2_corrected_inputs_all
+        # get_f2_biallelic_snps_corrected_all,
+        get_f2_tiger_inputs_all
     output:
-        flag_vcfs=touch("results/variants/f2/monomorphic/call_variants_f2.done"),
-        flag_inputs=touch("results/variants/tiger_analysis/prepare_corrected_inputs_f2.done"),
-
-
+        # flag_vcfs=touch("results/variants/f2/monomorphic/call_variants_f2.done"),
+        flag_inputs=touch("results/variants/tiger_analysis/prepare_tiger_inputs_f2.done"),

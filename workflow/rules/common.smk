@@ -61,25 +61,26 @@ def get_parental_biallelic_snps_corrected_all(wildcards):
     return mapped_files
 
 
-def get_f2_biallelic_snps_corrected_all(wildcards):
-    """ return the names of f2 vcfs (output of 04_variant_calling_f2.smk) """
-    mapped_files = []
+# def get_f2_biallelic_snps_corrected_all(wildcards):
+#     """ return the names of f2 vcfs (output of 04_variant_calling_f2.smk) """
+#     mapped_files = []
+#     for c in config["crossings"]:
+#         mapped_files += \
+#             ["results/variants/f2/monomorphic/{crossing_id}{f2_sample}.monomorphic.vcf.gz".format(
+#                 crossing_id=wildcards.crossing_id, f2_sample=f) for f in config[c]["f2_samples"]]
+#     return mapped_files
+
+
+def get_f2_tiger_inputs_all(wildcards):
+    outputs = []
     for c in config["crossings"]:
-        mapped_files += \
-            ["results/variants/f2/monomorphic/{crossing_id}{f2_sample}.monomorphic.vcf.gz".format(
-                crossing_id=wildcards.crossing_id, f2_sample=f) for f in config[c]["f2_samples"]]
-    return mapped_files
+        outputs += [
+                "results/tiger_analysis/F2.{crossing_id}/input.complete/{f2_sample}.input.complete".format(crossing_id=c["id"], f2_sample=f) for f in c["f2_samples"]]
+        outputs += [
+                "results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected".format(crossing_id=c["id"], f2_sample=f) for f in c["f2_samples"]]
 
-
-def get_f2_corrected_inputs_all(wildcards):
-        outputs = []
-        for c in config["crossings"]:
-            outputs += [
-                "results/tiger_analysis/F2.{crossing_id}/input.complete/{f2_sample}.input.complete".format(crossing_id=c, f2_sample=f)
-                for f in config[c]["f2_samples"]]
-            outputs += [
-                "results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected".format(crossing_id=c, f2_sample=f)
-                for f in config[c]["f2_samples"]]
+    print(outputs)
+    return outputs
     
 
 def get_parental_complete_markers_all(wildcards):
