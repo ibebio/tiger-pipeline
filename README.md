@@ -143,18 +143,27 @@ Whenever you change something, don't forget to commit the changes back to your g
     git commit -a
     git push
 
-### Step 7: Obtain updates from upstream
+-->
 
-Whenever you want to synchronize your workflow copy with new developments from upstream, do the following.
+### Step 6: Obtain updates from upstream
 
+Whenever you want to synchronize your workflow copy with bugfixes or new developments from the upstream repository, do the following:
+
+1. At the very least, your config files will be different, compared to the example ones from upstream. Therefore, they need to be secured before obtaining the upstream copy: `git stash`
+2. Obtain the updates from the Github repository: `git pull`
+3. Restore your modifications to the config files: `gut stash pop`
+
+The above steps assume that you did not modify any parts of the workflow, except the config files. If the config format has changed, you might need to update them.
+
+<!--
 1. Once, register the upstream repository in your local copy: `git remote add -f upstream git@github.com:snakemake-workflows/capture_mapping_pipeline.git` or `git remote add -f upstream https://github.com/snakemake-workflows/capture_mapping_pipeline.git` if you do not have setup ssh keys.
 2. Update the upstream version: `git fetch upstream`.
 3. Create a diff with the current version: `git diff HEAD upstream/master workflow > upstream-changes.diff`.
 4. Investigate the changes: `vim upstream-changes.diff`.
 5. Apply the modified diff via: `git apply upstream-changes.diff`.
 6. Carefully check whether you need to update the config files: `git diff HEAD upstream/master config`. If so, do it manually, and only where necessary, since you would otherwise likely overwrite your settings and samples.
-
-
+-->
+<!--
 ### Step 8: Contribute back
 
 In case you have also changed or added steps, please consider contributing them back to the original repository:
