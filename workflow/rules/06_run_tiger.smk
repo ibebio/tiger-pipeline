@@ -2,7 +2,7 @@ localrules: tiger_basecaller, tiger_allele_freq_estimator, tiger_beta_mixture_mo
 
 rule tiger_basecaller:
     input:
-        tig_input_computation_done="results/variants/tiger_analysis/prepare_tiger_inputs_f2.done", # This is not strictly needed, but added this to force the pipeline to create all input files first. Otherwise, it will only run with the 2 parent samples and one F2 samples until the 1st chekpoint
+        tig_input_computation_done="results/tiger_analysis/prepare_tiger_inputs_f2.done", # This is not strictly needed, but added this to force the pipeline to create all input files first. Otherwise, it will only run with the 2 parent samples and one F2 samples until the 1st chekpoint
         tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected",
     output:
         basecall="results/tiger_analysis/F2.{crossing_id}/basecalling/{f2_sample}.input.corrected.basecall.txt"

@@ -79,7 +79,6 @@ def get_f2_tiger_inputs_all(wildcards):
         outputs += [
                 "results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected".format(crossing_id=c["id"], f2_sample=f) for f in c["f2_samples"]]
 
-    print(outputs)
     return outputs
     
 
