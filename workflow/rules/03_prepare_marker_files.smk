@@ -138,7 +138,7 @@ rule intersect_parental_lines:
         bcftools index {output.bgzip_parent_alt_vcf} ;\
         \
         bcftools isec \
-            -Ov {output.bgzip_parent_alt_vcf} {output.bgzip_parent_ref_vcf} -p {output.isec_output_dir} ;\
+            -Ov {output.bgzip_parent_ref_vcf} {output.bgzip_parent_alt_vcf} -p {output.isec_output_dir} ;\
         cp {output.isec_output_dir}/0000.vcf {output.isec_vcf}
         """
 
