@@ -36,12 +36,12 @@ localrules: prepare_tiger_inputs_f2, prepare_tiger_inputs_f2_all
 rule prepare_tiger_inputs_f2:
     input:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.tsv",
-	marker_file_complete=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_ref"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+	marker_file_complete=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
 	marker_file_corrected="results/markers/corrected/{crossing_id}.SNP.private.txt"
     output:
         tig_in_complete="results/tiger_analysis/F2.{crossing_id}/input.complete/{f2_sample}.input.complete",
-	tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected",
-	work_dir=temp(directory("results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.workdir"))
+	    tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected",
+	    work_dir=temp(directory("results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.workdir"))
     params:
         tiger_scripts_dir=config["tiger"]["scripts_dir"],
 	sample_name=lambda wildcards : wildcards.f2_sample

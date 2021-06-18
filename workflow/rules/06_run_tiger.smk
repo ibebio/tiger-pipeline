@@ -52,11 +52,13 @@ rule tiger_allele_freq_estimator:
 
 checkpoint tiger_beta_mixture_model:
     input:
-        frequencies="results/tiger_analysis/F2.{crossing_id}/allele_frequencies/{f2_sample}.input.corrected.frequencies_bmm.txt"
+        frequencies="results/tiger_analysis/F2.{crossing_id}/allele_frequencies/{f2_sample}.input.corrected.frequencies_bmm.txt",
+        tig_in_corrected="results/tiger_analysis/F2.{crossing_id}/input.corrected/{f2_sample}.input.corrected"
     output:
         bmm_run_done="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt.done"
     params:
         tiger_scripts_dir=config["tiger"]["scripts_dir"],
+        minimal_corrected_input_number=config["tiger"]['minimal_corrected_input_number'],
         bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt"
     resources:
         n=1,
@@ -68,12 +70,18 @@ checkpoint tiger_beta_mixture_model:
         "../envs/r.yaml"
     shell:
         """
-        set +e
-        Rscript --vanilla {params.tiger_scripts_dir}/beta_mixture_model.R \
-          {input.frequencies} \
-          {params.bmm}
-        exitcode=$?
-        echo $exitcode > {output.bmm_run_done}
+        MARKER_COUNT=$(cat {input.tig_in_corrected} | wc -l)
+        if [[ $MARKER_COUNT -gt {params.minimal_corrected_input_number} ]] ; then
+          set +e
+          Rscript --vanilla {params.tiger_scripts_dir}/beta_mixture_model.R \
+            {input.frequencies} \
+            {params.bmm}
+          exitcode=$?
+          echo $exitcode > {output.bmm_run_done}
+        else
+          echo 1 > {output.bmm_run_done}
+          echo "Skipping creating {params.bmm} due to low marker count: $MARKER_COUNT"
+        fi
         """
 
         

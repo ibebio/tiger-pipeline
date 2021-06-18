@@ -118,10 +118,9 @@ rule estimate_filtering_params_parental_corrected:
         """
 
 
-
 rule filter_variants_parental_corrected:
     input:
-        vcf="results/variants/parental/raw/{parental_sample}.vcf",
+        vcf="results/variants/parental/filtered_complete/{parental_sample}.vcf",
         filter_file="results/variants/parental/snps_indels_corrected_filter.txt",
     output:
         filtered_vcf="results/variants/parental/filtered_corrected/{parental_sample}.vcf",

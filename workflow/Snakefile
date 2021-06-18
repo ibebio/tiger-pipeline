@@ -1,3 +1,4 @@
+
 # The main entry point of your workflow.
 # After configuring, running snakemake -n in a clone of this repository should successfully execute a dry-run of the workflow.
 
@@ -19,7 +20,7 @@ include: "rules/04_variant_calling_f2.smk"
 include: "rules/05_prepare_f2_tiger_input.smk"
 include: "rules/06_run_tiger.smk"
 include: "rules/07_make_tiger_output.smk"
-
+include: "rules/08_qcreport.smk"
 
 rule all:
     input:
@@ -28,7 +29,10 @@ rule all:
         expand("results/tables/rqtl/{crossing_id}.rqtl.csv",
                crossing_id=[c["id"] for c in config["crossings"]]),
         expand("results/plots/{crossing_id}.done",
-               crossing_id=[c["id"] for c in config["crossings"]])
+               crossing_id=[c["id"] for c in config["crossings"]]),
+        "results/report/qc.html"
+
+        
 
 # The first rule should define the default target files
 # Subsequent target rules can be specified below. They should start with all_*.

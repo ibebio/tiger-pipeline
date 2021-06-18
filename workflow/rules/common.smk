@@ -43,9 +43,9 @@ def get_parental_raw_variants_all(wildcards):
     mapped_files = []
     for c in config["crossings"]:
         mapped_files.append(
-            "results/variants/parental/raw/{}.vcf".format(c["parent_ref"]))
+            "results/variants/parental/raw/{}.vcf".format(c["parent_a"]))
         mapped_files.append(
-            "results/variants/parental/raw/{}.vcf".format(c["parent_alt"]))
+            "results/variants/parental/raw/{}.vcf".format(c["parent_b"]))
     return mapped_files
 
 
@@ -55,9 +55,9 @@ def get_parental_biallelic_snps_corrected_all(wildcards):
     mapped_files = []
     for c in config["crossings"]:
         mapped_files.append(
-            "results/variants/parental/biallelic_snps_corrected/{}.vcf".format(c["parent_ref"]))
+            "results/variants/parental/biallelic_snps_corrected/{}.vcf".format(c["parent_a"]))
         mapped_files.append(
-            "results/variants/parental/biallelic_snps_corrected/{}.vcf".format(c["parent_alt"]))
+            "results/variants/parental/biallelic_snps_corrected/{}.vcf".format(c["parent_b"]))
     return mapped_files
 
 
@@ -87,9 +87,9 @@ def get_parental_complete_markers_all(wildcards):
     marker_files = []
     for c in config["crossings"]:
         marker_files.append(
-            "results/markers/complete/{sample}.SNP.biallelic.complete.txt".format(sample=c["parent_ref"]))
+            "results/markers/complete/{sample}.SNP.biallelic.complete.txt".format(sample=c["parent_a"]))
         marker_files.append(
-            "results/markers/complete/{sample}.SNP.biallelic.complete.txt".format(sample=c["parent_alt"]))
+            "results/markers/complete/{sample}.SNP.biallelic.complete.txt".format(sample=c["parent_b"]))
     return marker_files
 
 

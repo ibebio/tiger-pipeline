@@ -33,12 +33,42 @@ rule trim_reads:
         2> {log}
         """
 
+#(bio36) ibezrukov2@taco:/ebio/abt6_projects9/At_dFLC/data/dFLC_F2mapping_AS$ fastqc -o ~/fastq_test/ p9925-WT-001.merged2.R1.fastq.gz
+#p9925-WT-001.merged2.R1_fastqc.html  p9925-WT-001.merged2.R1_fastqc.zip
+        
+        
+rule qc_trim_reads:
+    input:
+        fq1="results/trimmed/{sample}.R1.trimmed.fastq.gz",
+        fq2="results/trimmed/{sample}.R2.trimmed.fastq.gz",
+    output:
+        qc_zip1="results/qc/trimmed_fastqc/{sample}.R1.trimmed_fastqc.zip",
+        qc_zip2="results/qc/trimmed_fastqc/{sample}.R2.trimmed_fastqc.zip",
+        qc_html1="results/qc/trimmed_fastqc/{sample}.R1.trimmed_fastqc.html",
+        qc_html2="results/qc/trimmed_fastqc/{sample}.R2.trimmed_fastqc.html",        
+    threads: 2
+    params:
+        outdir="results/qc/trimmed_fastqc/"
+    resources:
+        n=2,
+        time=lambda wildcards, attempt: 1 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 16 * attempt,
+    log:
+        "results/logs/qc_trim_reads/{sample}.log"
+    conda:
+        "../envs/qc.yaml"
+                        
+    shell:
+         "fastqc -t {threads} -o {params.outdir} {input.fq1} {input.fq2} 2> {log}"
+
 
 # Align to reference
 rule map_to_reference:
     input:
         fq1="results/trimmed/{sample}.R1.trimmed.fastq.gz",
         fq2="results/trimmed/{sample}.R2.trimmed.fastq.gz",
+        qc_zip1="results/qc/trimmed_fastqc/{sample}.R1.trimmed_fastqc.zip", # The QC files are not used, but should be
+        qc_zip2="results/qc/trimmed_fastqc/{sample}.R2.trimmed_fastqc.zip", # created before running this rule.
     output:
         temp("results/mapped/{sample}.sorted.bam")
     params:
@@ -59,13 +89,13 @@ rule map_to_reference:
     shell:
         "workflow/scripts/map_to_reference.sh {threads} {params.platform} {wildcards.sample} {params.index} {output} {input} {params.library} 2> {log}"
 
-        
+
 rule remove_duplicates:
     input:
         "results/mapped/{sample}.sorted.bam"
     output:
         bam="results/rmdup/{sample}.rmdup.bam",
-        metrics="results/rmdup/{sample}/metrics.txt"
+        metrics="results/qc/rmdup/{sample}.metrics.txt"
     resources:
         time=lambda wildcards, attempt: 12 * 59 * attempt,
         mem_gb_pt=lambda wildcards, attempt: 18 * attempt,
@@ -86,9 +116,32 @@ rule remove_duplicates:
            {output.bam} 2> {log}
         """
 
+rule qc_bam_qualimap:
+    input:
+        bam="results/rmdup/{sample}.rmdup.bam",
+    output:
+        qc_dir=directory("results/qc/qualimap/{sample}"),
+        qc_genome_results="results/qc/qualimap/{sample}/genome_results.txt",
+    resources:
+        time=lambda wildcards, attempt: 1 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 32 * attempt,
+    log:
+        "results/logs/qc_bam_qualimap/{sample}.log"
+    conda:
+        "../envs/qc.yaml"
+    shell:
+        """
+        qualimap bamqc --java-mem-size=16G \
+                       -bam {input.bam} \
+                       -outdir {output.qc_dir} \
+        2> {log}
+        """
+
 # Aggregate all mapped files
 rule map_all:
     input:
-        get_all_mapped_files
+        bams=get_all_mapped_files,
+        qcs=expand("results/qc/qualimap/{sample}/genome_results.txt", sample=samples.index)
+        
     output:
         flag=touch("results/rmdup/rmdup.done")

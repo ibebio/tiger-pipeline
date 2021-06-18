@@ -1,43 +1,64 @@
 # This file should contain everything to configure the workflow on a global scale.
 # In case of sample based data, it should be complemented by a samples.tsv file that contains
 # one row per sample. It can be parsed easily via pandas.
-# All samples, including parental lines and F2
+
+## All samples, including parental lines and F2
 samples: "config/samples.csv"
 
-# Crossings and their parents
-# Should be the ID of the cross, and the 2 parents.
-# Their IDs must correspond to the sample names given the samples file above.
-# *The order is important*: parent A (ref) has Col-0 allele, and parent B (alt) has alternative allele
+
+## Crossings and their parents
+# Should be the ID of the cross, and the 2 parents.  Their IDs must
+# correspond to the sample names given the samples file above.
+#
+### Order of the parents
+#
+# In order to generate a sufficient number of markers, the parent
+# which is genetically further apart from the reference (Col-0 in case
+# of a. thaliana) should be assigned as containing the alternative
+# allele.
+#
+# If auto_order is set to "yes", the pipeline automatically determines
+# which parent has the alternative allele and which the reference
+# allele by selecting the parent with the higher number of SNPs as
+# alternative and thus the marker source.
+#
+# For manual selection, set auto_order to "no". In this case, parent_a
+# will be considered as the reference, and parent_b as the
+# alternative, and thus the marker source.
 crossings:
   - id: "14-1"
-    parent_ref: "9821-14-R04"
-    parent_alt: "9925-03-R03"
+    parent_a: "9821-14-R04"
+    parent_b: "9925-03-R03"
+    auto_order: "yes"
     f2_samples:
         - "F2-14-1-153"
         - "F2-14-1-197"
 
-# Read group settings, no need to change this
+        
+## Read group settings, no need to change this
 read_group:
   platform: "ILLUMINA"
   library: "1"
 
-# Reference genome
+  
+## Reference genome
 ref:
   name: "TAIR-10"
   genome: "/ebio/abt6_projects8/ath_somaclonal_variation/data/reference_genomes/Col-0/TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
 
 
-# Trimming parameters
+## Trimming parameters
 read_trimming:
-  adapter: "CTGTCTCTTATA" # NEXTERA
+  adapter: "CTGTCTCTTATA" # NEXTERA, change as required
 
   
-# Parental Variant calling parameters, no need to change this normally
+## Parental Variant calling parameters, no need to change this normally
 variant_calling_parental:
   threads: 10
   java_options: "-Xmx24g -Xms24g"
 
-# Hard variant filtering parameters
+  
+## Hard variant filtering parameters
 # The filtering is performed individually for SNPs and Indels.
 #
 # snps/indels_complete filter is for the generation of complete marker files.
@@ -47,17 +68,24 @@ variant_calling_parental:
 # The default option for it is "auto", where the cut-offs are determined from the distributions of the
 # fields.
 # The indels are removed, therefore it is not required to create a separate filter for them.
-
 variant_filtering_parental:
   snps_complete_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
   indels_complete_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
   snps_indels_corrected_filter: "auto"
   # Comment the above line and uncomment the one below for use of a hard-coded strict filter
   # snps_indels_corrected_filter: "QD < 22.0 || FS > 10.0 || MQ < 50.0 || MQRankSum < -5.0 || ReadPosRankSum < -5.0"
+
+  # Filter file for transposable elements.
   te_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed"
+  # Filter file for telomeric and centromerig regions.
+  tlr_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed" # TODO 1001g for everyone -> Uli knows there it is
 
+filtering_f2:
+  sd_factor: 5.0
 
-# Settings for the TIGER pipeline
+## Settings for the TIGER pipeline
 tiger:
   scripts_dir: "workflow/TIGER_Scripts-for-distribution"
   chromosome_size_file: "resources/TAIR10_chrSize.txt"
+  # Minimal number of markers for F2 samples. If below this number, no HMM model will be computed for this sample
+  minimal_corrected_input_number: 5000
