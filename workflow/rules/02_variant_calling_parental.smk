@@ -6,7 +6,7 @@ rule call_variants_parental:
         vcf="results/variants/parental/raw/{parental_sample}.vcf",
     params:
         index=config["ref"]["genome"],
-        java_options=config["variant_calling_parental"]["java_options"],
+        java_options=config["gatk_options"]["java_options"],
     threads: 4
     resources:
         n=4,
@@ -37,7 +37,8 @@ rule filter_variants_parental_complete:
     params:
         index=config["ref"]["genome"],
         snp_filter=config["variant_filtering_parental"]["snps_complete_filter"],
-        indel_filter=config["variant_filtering_parental"]["indels_complete_filter"]
+        indel_filter=config["variant_filtering_parental"]["indels_complete_filter"],
+        java_options=config["gatk_options"]["java_options"],
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
@@ -48,26 +49,26 @@ rule filter_variants_parental_complete:
         "../envs/gatk4.yaml"
     shell:
         """
-        gatk SelectVariants \
+        gatk --java-options "{params.java_options}" SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
              --select-type-to-include SNP \
              -O {output.snps} \
         ; \
-        gatk VariantFiltration \
+        gatk --java-options "{params.java_options}" VariantFiltration \
              -R {params.index} \
              -V {output.snps} \
              --filter-name "snps-hard-filter" \
              --filter-expression "{params.snp_filter}" \
              -O {output.filtered_snps} \
         ; \
-        gatk SelectVariants \
+        gatk --java-options "{params.java_options}" SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
              --select-type-to-include INDEL \
              -O {output.indels} \
         ; \
-        gatk VariantFiltration \
+        gatk --java-options "{params.java_options}" VariantFiltration \
              -R {params.index} \
              -V {output.indels} \
              --filter-name "indels-hard-filter" \
@@ -126,6 +127,7 @@ rule filter_variants_parental_corrected:
         filtered_vcf="results/variants/parental/filtered_corrected/{parental_sample}.vcf",
     params:
         index=config["ref"]["genome"],
+        java_options=config["gatk_options"]["java_options"]
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
@@ -136,7 +138,7 @@ rule filter_variants_parental_corrected:
         "../envs/gatk4.yaml"
     shell:
         """
-        gatk VariantFiltration \
+        gatk --java-options "{params.java_options}" VariantFiltration \
              -R {params.index} \
              -V {input.vcf} \
              --filter-name "snps-indels-complete-filter" \

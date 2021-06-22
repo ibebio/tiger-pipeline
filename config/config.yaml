@@ -52,8 +52,8 @@ read_trimming:
   adapter: "CTGTCTCTTATA" # NEXTERA, change as required
 
   
-## Parental Variant calling parameters, no need to change this normally
-variant_calling_parental:
+## GATK options for parental variant calling/filtering parameters, no need to change this normally
+gatk_options:
   threads: 10
   java_options: "-Xmx24g -Xms24g"
 
