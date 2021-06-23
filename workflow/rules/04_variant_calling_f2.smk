@@ -6,7 +6,7 @@ rule collect_allelic_counts_f2:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.raw.tsv"
     params:
         index=config["ref"]["genome"],
-        java_options=config["variant_calling_parental"]["java_options"]
+        java_options=config["gatk_options"]["java_options"]
     resources:
         n=1,
         time=lambda wildcards, attempt: 1 * 59 * attempt,

@@ -12,7 +12,7 @@ rule extract_biallelic_snps_parental_complete:
         vcf="results/variants/parental/biallelic_snps_complete/{parental_sample}.vcf",
     params:
         index=config["ref"]["genome"],
-        java_options=config["variant_calling_parental"]["java_options"],
+        java_options=config["gatk_options"]["java_options"],
     threads: 1
     resources:
         n=1,
@@ -70,7 +70,7 @@ rule extract_biallelic_snps_parental_corrected:
         vcf="results/variants/parental/biallelic_snps_corrected/{parental_sample}.vcf",
     params:
         index=config["ref"]["genome"],
-        java_options=config["variant_calling_parental"]["java_options"],
+        java_options=config["gatk_options"]["java_options"],
     threads: 1
     resources:
         n=1,
@@ -122,7 +122,7 @@ rule intersect_parental_lines:
         isec_vcf="results/variants/parental/isec_parent_lines/{crossing_id}.vcf",
     params:
         index=config["ref"]["genome"],
-        java_options=config["variant_calling_parental"]["java_options"],
+        java_options=config["gatk_options"]["java_options"],
         parent_a_vcf=lambda wildcards: "results/variants/parental/biallelic_snps_corrected/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         parent_b_vcf=lambda wildcards: "results/variants/parental/biallelic_snps_corrected/{parent_b}.vcf".format(parent_b=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         auto_order=lambda wildcards: "{auto_order}".format(auto_order=[c["auto_order"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
