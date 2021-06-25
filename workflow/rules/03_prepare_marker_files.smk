@@ -2,7 +2,7 @@
 # CREATE COMPLETE MARKER FILES
 ############################################################
 
-localrules: create_complete_markers, create_corrected_markers, create_marker_all
+localrules: create_complete_markers, create_corrected_markers, create_marker_all, qc_marker_snp_counts
 
 # Extract biallelic SNPs
 rule extract_biallelic_snps_parental_complete:

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# coding: utf-8
 import allel
 from matplotlib_venn import venn2, venn2_circles
 from matplotlib import pyplot as plt
