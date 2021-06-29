@@ -16,7 +16,5 @@ rule multiqc_report:
         "../envs/qc.yaml"
     shell:
         """
-        multiqc {params.qc_root_dir} -n {output.multiqc_report} 2> {log}
+        multiqc {params.qc_root_dir} --force -n {output.multiqc_report} 2> {log}
         """
-
-    
