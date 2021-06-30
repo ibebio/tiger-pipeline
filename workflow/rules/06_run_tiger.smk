@@ -11,14 +11,15 @@ rule tiger_basecaller:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
+        java_options=lambda wildcards, attempt: "-Xmx{}g -Xms{}g".format(8 * attempt, 8 * attempt)
     log:
         "results/logs/tiger_basecaller/{crossing_id}.{f2_sample}.log"
     conda:
         "../envs/tiger.yaml"
     shell:
         """
-        java -jar {params.tiger_scripts_dir}/base_caller.jar \
+        java {resources.java_options} -jar {params.tiger_scripts_dir}/base_caller.jar \
           -r {input.tig_in_corrected} \
           -o {output.basecall} \
           -n bi 2> {log}
@@ -36,14 +37,15 @@ rule tiger_allele_freq_estimator:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
+        java_options=lambda wildcards, attempt: "-Xmx{}g -Xms{}g".format(8 * attempt,8 * attempt)
     log:
         "results/logs/tiger_allele_freq_estimator/{crossing_id}.{f2_sample}.log"
     conda:
         "../envs/tiger.yaml"
     shell:
         """
-        java -jar {params.tiger_scripts_dir}/allele_freq_estimator.jar \
+        java {resources.java_options} -jar {params.tiger_scripts_dir}/allele_freq_estimator.jar \
           -r {input.tig_in_corrected} \
           -o {output.frequencies} \
           -n bi -w 1000 2> {log}
@@ -163,14 +165,15 @@ rule tiger_run_hmm:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt,
+        java_options=lambda wildcards, attempt: "-Xmx{}g -Xms{}g".format(8 * attempt,8 * attempt)
     log:
         "results/logs/tiger_run_hmm/{crossing_id}.{f2_sample}.log"
     conda:
         "../envs/tiger.yaml"
     shell:
         """
-        java -jar {params.tiger_scripts_dir}/hmm_play.jar \
+        java {resources.java_options} -jar {params.tiger_scripts_dir}/hmm_play.jar \
           -r {input.basecall} \
           -o {output.hmm_output} \
           -t bi \
@@ -255,7 +258,7 @@ rule tiger_smooth_out_breaks:
     shell:
         """
         perl {params.tiger_scripts_dir}/breaks_smoother.pl \
-	  -b {input.rough_co_breaks_refined} \
+	      -b {input.rough_co_breaks_refined} \
           -o {output.breaks_refined_corrected}
         """
 

@@ -47,11 +47,13 @@ if [[ "${SNAKEMAKE_PROFILE}" == "sge" ]] ; then
 	--use-conda \
 	--scheduler greedy \
 	--profile sge \
+  --restart-times 2 \
 	${SNAKEMAKE_ARGS}
 else
     snakemake \
 	--jobs ${LOCAL_CORES} \
 	--scheduler greedy \
 	--use-conda \
+  --restart-times 2 \
 	${SNAKEMAKE_ARGS}
 fi
