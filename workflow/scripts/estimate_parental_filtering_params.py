@@ -61,7 +61,7 @@ def main(args):
     x = out[1]
     y = out[0]
     x= [ x[i] + (x[i + 1] - x[i])/2 for i in range(0,len(x) - 1)]
-    params,cov = curve_fit(bimodal,x,y)
+    params,cov = curve_fit(bimodal,x,y, maxfev=10000)
     plt.plot(x,bimodal(x,*params),color='red',lw=3,label='Fit')
     
     mean_1 = params[0]
