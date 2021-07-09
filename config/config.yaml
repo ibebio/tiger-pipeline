@@ -77,8 +77,8 @@ variant_filtering_parental:
 
   # Filter file for transposable elements.
   te_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed"
-  # Filter file for telomeric and centromerig regions.
-  tlr_bed_file: "resources/TAIR10_Transposable_Elements_BED.bed" # TODO 1001g for everyone -> Uli knows there it is
+  # Filter file for telomeric and centromeric regions.
+  tlr_bed_file: "resources/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.centromes_telomeres.bed"
 
 filtering_f2:
   sd_factor: 5.0
