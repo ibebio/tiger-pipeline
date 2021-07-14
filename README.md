@@ -151,7 +151,7 @@ Whenever you want to synchronize your workflow copy with bugfixes or new develop
 
 1. At the very least, your config files will be different, compared to the example ones from upstream. Therefore, they need to be secured before obtaining the upstream copy: `git stash`
 2. Obtain the updates from the Github repository: `git pull`
-3. Restore your modifications to the config files: `gut stash pop`
+3. Restore your modifications to the config files: `git stash pop`
 
 The above steps assume that you did not modify any parts of the workflow, except the config files. If the config format has changed, you might need to update them.
 
