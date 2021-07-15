@@ -1,7 +1,7 @@
 rule collect_allelic_counts_f2:
     input:
         bam="results/rmdup/{f2_sample}.rmdup.bam",
-        marker_complete_ref_vcf=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0])
+        marker_complete_ref_vcf="results/variants/parental/biallelic_snps_complete/ref.{crossing_id}.vcf"
     output:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.raw.tsv"
     params:

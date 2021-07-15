@@ -4,7 +4,7 @@ import itertools
 
 # this container defines the underlying OS for each job when using the workflow
 # with --use-conda --use-singularity
-singularity: "docker://continuumio/miniconda3"
+container: "docker://continuumio/miniconda3"
 
 ##### load config and sample sheets #####
 
@@ -20,7 +20,9 @@ samples.index.names = ["sample_id"]
 wildcard_constraints:
     sample="|".join(samples.index),
     # TODO FIX parental_sample="|".join(list(itertools.chain(*[c["parent_ref"] for c in config["crossings"]]))) + "|" + "|".join(list(itertools.chain(*[c["parent_alt"] for c in config["crossings"]]))) ,
-    f2_sample="|".join(list(itertools.chain(*[c["f2_samples"] for c in config["crossings"]])))
+    f2_sample="|".join(list(itertools.chain(*[c["f2_samples"] for c in config["crossings"]]))),
+    crossing_id="|".join([c["id"] for c in config["crossings"]]),
+
 
 
 ##### Helper functions #####

@@ -115,17 +115,20 @@ rule intersect_parental_lines:
     input:
         parental_vcfs_done="results/variants/parental/biallelic_snps_corrected/biallelic_snps_corrected.done",
     output:
-        bgzip_parent_ref_vcf=temp("results/variants/parental/isec_parent_lines/{crossing_id}.parent_ref.vcf.gz"),
-        bgzip_parent_src_vcf=temp("results/variants/parental/isec_parent_lines/{crossing_id}.parent_src.vcf.gz"),
-        isec_output_dir=temp(directory("results/variants/parental/isec_parent_lines/isec.{crossing_id}")),
-        isec_output_file=temp("results/variants/parental/isec_parent_lines/isec.{crossing_id}/0000.vcf"),
+        bgzip_parent_ref_vcf="results/variants/parental/isec_parent_lines/{crossing_id}.parent_ref.vcf.gz",
+        bgzip_parent_src_vcf="results/variants/parental/isec_parent_lines/{crossing_id}.parent_src.vcf.gz",
+        isec_output_dir=directory("results/variants/parental/isec_parent_lines/isec.{crossing_id}"),
+        isec_output_file="results/variants/parental/isec_parent_lines/isec.{crossing_id}/0000.vcf",
         isec_vcf="results/variants/parental/isec_parent_lines/{crossing_id}.vcf",
+        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt"
     params:
         index=config["ref"]["genome"],
         java_options=config["gatk_options"]["java_options"],
         parent_a_vcf=lambda wildcards: "results/variants/parental/biallelic_snps_corrected/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         parent_b_vcf=lambda wildcards: "results/variants/parental/biallelic_snps_corrected/{parent_b}.vcf".format(parent_b=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         auto_order=lambda wildcards: "{auto_order}".format(auto_order=[c["auto_order"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+        parent_a=lambda wildcards: [c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
+        parent_b=lambda wildcards: [c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]
     threads: 1
     resources:
         n=1,
@@ -138,25 +141,28 @@ rule intersect_parental_lines:
     shell:
         """
         # Select marker ref and marker source
-        if [[ "{params.auto_order}" == "yes" ]] ; then
+        if [[ "{params.auto_order}" == "yes" ]] ; then \
            echo "Try to automatically determine marker source and marker ref parental lines" 2> {log} ;\
            a_snp_count=$(cat {params.parent_a_vcf} |grep -v '^#' |wc -l) ;\
            b_snp_count=$(cat {params.parent_b_vcf} |grep -v '^#' |wc -l) ;\
            if [[ $a_snp_count -gt $b_snp_count ]] ; then \
              parent_src_vcf={params.parent_a_vcf} ;\
              parent_ref_vcf={params.parent_b_vcf} ;\
+             echo "{params.parent_b}" > {output.ref_parent} ;\
              echo "Selected parent a as marker source with $a_snp_count SNPs" 2>> {log} ;\
              echo "Selected parent b as marker ref with $b_snp_count SNPs" 2>> {log} ;\
            else \
              parent_src_vcf={params.parent_b_vcf} ;\
              parent_ref_vcf={params.parent_a_vcf} ;\
+             echo "{params.parent_a}" > {output.ref_parent} ;\
              echo "Selected parent b as marker source with $b_snp_count SNPs" 2>> {log} ;\
              echo "Selected parent a as marker ref with $a_snp_count SNPs" 2>> {log} ;\
            fi ;\
         else \
-           echo "Using manual ref/src order: parent a is ref, parent b is src."
+           echo "Using manual ref/src order: parent a is ref, parent b is src." ;\
            parent_src_vcf={params.parent_b_vcf} ;\
            parent_ref_vcf={params.parent_a_vcf} ;\
+           echo "{params.parent_a}" > {output.ref_parent} ;\
         fi ;\
         \
         # Prepare parent a and b input files
@@ -170,6 +176,10 @@ rule intersect_parental_lines:
         cp {output.isec_output_dir}/0000.vcf {output.isec_vcf}
         """
 
+
+
+
+        
 
 # Create figure with the number of SNPs
 rule qc_marker_snp_counts:
@@ -263,4 +273,45 @@ rule create_corrected_markers:
         SnpSift extractFields \
             {input.vcf} \
             CHROM POS > {output.marker_file} 2> {log}
+        """
+
+        
+# Copy the complete reference marker either from parent a or b, depending on config
+rule copy_complete_marker_and_vcf_ref:
+    input:
+        marker_file_complete_a=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+        marker_file_complete_b=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+        marker_complete_vcf_a=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+        marker_complete_vcf_b=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_b}.vcf".format(parent_b=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt"
+    output:
+        marker_file_complete_ref="results/markers/complete/{crossing_id}.SNP.biallelic.complete.txt",
+        marker_complete_vcf_ref="results/variants/parental/biallelic_snps_complete/ref.{crossing_id}.vcf"
+    params:
+        parent_a=lambda wildcards: [c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
+        parent_b=lambda wildcards: [c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
+    threads: 1
+    resources:
+        n=1,
+        time=lambda wildcards, attempt: 12 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+    log:
+        "results/logs/copy_complete_marker_ref/{crossing_id}.log"
+    conda:
+        "../envs/global.yaml"
+    shell:
+        """
+        REF_PARENT=$(cat {input.ref_parent}) ;\
+        if [[ "$REF_PARENT" == "{params.parent_a}" ]] ; then \
+           cp {input.marker_file_complete_a} {output.marker_file_complete_ref} ;\
+           cp {input.marker_complete_vcf_a} {output.marker_complete_vcf_ref} ;\
+        elif
+           [[ "$REF_PARENT" == "{params.parent_b}" ]] ; then \
+           cp {input.marker_file_complete_b} {output.marker_file_complete_ref} ;\
+           cp {input.marker_complete_vcf_b} {output.marker_complete_vcf_ref} ;\
+        else \
+           echo "ERROR: Ref parent is neither one from config a or b." > {log} ;\
+           echo 'This should not happen (TM). Exiting!' > {log} ;\
+           exit 1 ; \
+        fi
         """
