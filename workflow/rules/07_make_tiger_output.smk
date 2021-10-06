@@ -77,7 +77,8 @@ rule tiger_create_rqtl_input:
            --chrom_size_file {params.tiger_chrom_size_file} \
            --output {output.rqtl_csv} 2> {log}
         """
-    
+
+
 rule tiger_create_genotype_plots:
     input:
         plots=get_plot_files_for_crossing_id

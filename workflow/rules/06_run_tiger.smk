@@ -95,7 +95,7 @@ rule tiger_prepare_hmm:
         frequencies="results/tiger_analysis/F2.{crossing_id}/allele_frequencies/{f2_sample}.input.corrected.frequencies_bmm.txt",
         bmm="results/tiger_analysis/F2.{crossing_id}/beta_mixture_models/{f2_sample}.bmm.intersections.txt"
     output:
-        hmm_prob="results/tiger_analysis/F2.{crossing_id}/hmm_probabilities/{f2_sample}.hmm_probabilities.txt"
+        hmm_prob="results/tiger_analysis/F2.{crossing_id}/hmm_probabilities/{f2_sample}.hmm_probabilities.txt",
     params:
         tiger_scripts_dir=config["tiger"]["scripts_dir"],
         tiger_chrom_size_file=config["tiger"]["chromosome_size_file"],

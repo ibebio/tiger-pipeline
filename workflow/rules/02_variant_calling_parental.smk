@@ -87,10 +87,11 @@ rule estimate_filtering_params_parental_corrected:
         vcf=get_parental_raw_variants_all # TODO make the filtering per crossing
     output:
         filter_file="results/variants/parental/snps_indels_corrected_filter.txt",
-        plot="results/plots/parental_filtering.png"
+        plot="results/qc/Parental_filtering_estimation_mqc.png",
+        plots_temp_directory=directory("results/plots/parental_filtering_tmp")
     params:
         snp_indel_filter=config["variant_filtering_parental"]["snps_indels_corrected_filter"],
-        plot_prefix="results/plots/parental_filtering_tmp"
+        plot_prefix="parental_filtering_tmp"
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
@@ -101,21 +102,22 @@ rule estimate_filtering_params_parental_corrected:
         "../envs/estimate_filtering_params.yaml"
     shell:
         """
+        mkdir -p {output.plots_temp_directory}
         # Prepare input args
         INPUTARGS=$(echo " {input.vcf}" | sed 's/ / --vcf /g')
         # Estimate filtering parameters
         env python workflow/scripts/estimate_parental_filtering_params.py \
             $INPUTARGS \
             --filter_file {output.filter_file} \
-            --plot {params.plot_prefix} 2> {log}
+            --plot {output.plots_temp_directory}/{params.plot_prefix} 2> {log}
 
         if [[ "{params.snp_indel_filter}" != "auto" ]] ; then
           # Use hard-coded filtering, overwrite filter_file
           echo "{params.snp_indel_filter}" > {output.filter_file}
         fi
 
-        montage {params.plot_prefix}*.png -geometry +0+0 -title "$(cat {output.filter_file})" {output.plot} 2>> {log}
-        rm {params.plot_prefix}*.png
+        montage {output.plots_temp_directory}/{params.plot_prefix}*.png -geometry +0+0 -title "$(cat {output.filter_file})" {output.plot} 2>> {log}
+        # rm {params.plot_prefix}*.png
         """
 
 

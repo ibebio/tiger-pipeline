@@ -31,7 +31,7 @@
 #           {params.sample_name}
 #         """
 
-localrules: prepare_tiger_inputs_f2, prepare_tiger_inputs_f2_all
+localrules: prepare_tiger_inputs_f2, prepare_tiger_inputs_f2_all,qc_pipeline_overview_image
 
 rule prepare_tiger_inputs_f2:
     input:
@@ -76,3 +76,22 @@ rule prepare_tiger_inputs_f2_all:
     output:
         # flag_vcfs=touch("results/variants/f2/monomorphic/call_variants_f2.done"),
         flag_inputs=touch("results/tiger_analysis/prepare_tiger_inputs_f2.done"),
+
+# QC pipeline visualization rule
+rule qc_pipeline_overview_image:
+    input:
+        flag_f2_inputs="results/tiger_analysis/prepare_tiger_inputs_f2.done",
+        flag_rqtl_plots="results/plots/{crossing_id}.done",
+        src_parent="results/variants/parental/{crossing_id}.src_parent.txt",
+        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt",
+        no_te_no_tlr_vcf="results/variants/parental/isec_parent_lines_noTEnoTLR/{crossing_id}.vcf",
+        isec_output_dir=directory("results/variants/parental/isec_parent_lines/isec.{crossing_id}")
+    output:
+        overview_image="results/qc/TIGER_input_summary_for_crossing_id_{crossing_id}_mqc.png"
+    params:
+        crossing_id="{crossing_id}"
+    threads: 1
+    conda:
+        "../envs/qc.yaml"
+    script:
+        "../scripts/qc_pipeline_overview.py"

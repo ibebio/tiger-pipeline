@@ -2,7 +2,7 @@
 # CREATE COMPLETE MARKER FILES
 ############################################################
 
-localrules: create_complete_markers, create_corrected_markers, create_marker_all, qc_marker_snp_counts
+localrules: create_complete_markers, create_corrected_markers, create_marker_all
 
 # Extract biallelic SNPs
 rule extract_biallelic_snps_parental_complete:
@@ -34,7 +34,7 @@ rule extract_biallelic_snps_parental_complete:
              -O {output.vcf}  2> {log}
         """
 
-        
+
 # Extract CHROM and POS into a text file
 rule create_complete_markers:
     input:
@@ -120,7 +120,8 @@ rule intersect_parental_lines:
         isec_output_dir=directory("results/variants/parental/isec_parent_lines/isec.{crossing_id}"),
         isec_output_file="results/variants/parental/isec_parent_lines/isec.{crossing_id}/0000.vcf",
         isec_vcf="results/variants/parental/isec_parent_lines/{crossing_id}.vcf",
-        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt"
+        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt",
+        src_parent="results/variants/parental/{crossing_id}.src_parent.txt"
     params:
         index=config["ref"]["genome"],
         java_options=config["gatk_options"]["java_options"],
@@ -149,12 +150,14 @@ rule intersect_parental_lines:
              parent_src_vcf={params.parent_a_vcf} ;\
              parent_ref_vcf={params.parent_b_vcf} ;\
              echo "{params.parent_b}" > {output.ref_parent} ;\
+             echo "{params.parent_a}" > {output.src_parent} ;\
              echo "Selected parent a as marker source with $a_snp_count SNPs" 2>> {log} ;\
              echo "Selected parent b as marker ref with $b_snp_count SNPs" 2>> {log} ;\
            else \
              parent_src_vcf={params.parent_b_vcf} ;\
              parent_ref_vcf={params.parent_a_vcf} ;\
              echo "{params.parent_a}" > {output.ref_parent} ;\
+             echo "{params.parent_b}" > {output.src_parent} ;\
              echo "Selected parent b as marker source with $b_snp_count SNPs" 2>> {log} ;\
              echo "Selected parent a as marker ref with $a_snp_count SNPs" 2>> {log} ;\
            fi ;\
@@ -163,6 +166,7 @@ rule intersect_parental_lines:
            parent_src_vcf={params.parent_b_vcf} ;\
            parent_ref_vcf={params.parent_a_vcf} ;\
            echo "{params.parent_a}" > {output.ref_parent} ;\
+           echo "{params.parent_b}" > {output.src_parent} ;\
         fi ;\
         \
         # Prepare parent a and b input files
@@ -177,34 +181,6 @@ rule intersect_parental_lines:
         """
 
 
-
-
-        
-
-# Create figure with the number of SNPs
-rule qc_marker_snp_counts:
-    input:
-        isec_output="results/variants/parental/isec_parent_lines/isec.{crossing_id}/0000.vcf",
-        isec_output_dir=directory("results/variants/parental/isec_parent_lines/isec.{crossing_id}"),
-        # corrected_marker_vcf="results/variants/parental/isec_parent_lines_noTE/{crossing_id}.vcf"
-    output:
-        parental_snps_fig="results/qc/biallelic_parental_snp_counts_{crossing_id}_mqc.png",
-    params:
-        crossing_id="{crossing_id}"
-    threads: 1
-    resources:
-        n=1,
-        time=lambda wildcards, attempt: 1 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 24 * attempt
-    log:
-        "results/logs/qc_marker_snp_counts/{crossing_id}.log"
-    conda:
-        "../envs/qc.yaml"
-    script:
-        # rename to plot_marker_snp_counts
-        "../scripts/plot_parental_biallelic_snp_counts.py"
-
-        
 rule remove_transposable_elements:
     input:
         vcf="results/variants/parental/isec_parent_lines/{crossing_id}.vcf",

@@ -5,7 +5,7 @@ rule multiqc_report:
         qc_fastqc_zip1=expand("results/qc/trimmed_fastqc/{sample}.R1.trimmed_fastqc.zip", sample=samples.index),
         qc_fastqc_zip2=expand("results/qc/trimmed_fastqc/{sample}.R2.trimmed_fastqc.zip", sample=samples.index),
         qc_bam_qualimap=expand("results/qc/qualimap/{sample}/genome_results.txt", sample=samples.index),
-        qc_marker_snp_counts=expand("results/qc/biallelic_parental_snp_counts_{crossing_id}_mqc.png", crossing_id=[c["id"] for c in config["crossings"]])
+        qc_overview_images=expand("results/qc/TIGER_input_summary_for_crossing_id_{crossing_id}_mqc.png",crossing_id=[c["id"] for c in config["crossings"]])
     output:
         multiqc_report="results/report/qc.html"
     params:
