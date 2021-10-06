@@ -88,4 +88,19 @@ tiger:
   scripts_dir: "workflow/TIGER_Scripts-for-distribution"
   chromosome_size_file: "resources/TAIR10_chrSize.txt"
   # Minimal number of markers for F2 samples. If below this number, no HMM model will be computed for this sample
-  minimal_corrected_input_number: 5000
+  #minimal_corrected_input_number: 5000
+  minimal_corrected_input_number: 500
+
+## Debug settings
+debug:
+  call_variants_f2:
+    create_vcf_for_f2: "yes"
+    ref:
+      name: "TAIR-10"
+      genome: "/ebio/abt6_projects8/ath_somaclonal_variation/data/reference_genomes/Col-0/TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
+    variant_filtering:
+       snps_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
+       indels_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
+    biallelic_snps:
+      filter: ""
+      allowed_missing_fraction: 0.1
