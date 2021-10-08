@@ -36,7 +36,10 @@ PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # Create environments first, since there is no internet
 # connectivity on the cluster nodes
 if [[ ! -d ${PIPELINE_DIR}/conda/ ]] ; then
-    snakemake --use-conda --conda-create-envs-only --cores 4
+    snakemake --use-conda \
+      --conda-create-envs-only \
+      --cores 4 \
+      --conda-frontend mamba
 fi
 
 # Run the workflow
@@ -47,13 +50,13 @@ if [[ "${SNAKEMAKE_PROFILE}" == "sge" ]] ; then
 	--use-conda \
 	--scheduler greedy \
 	--profile sge \
-  --restart-times 2 \
+  --conda-frontend mamba \
 	${SNAKEMAKE_ARGS}
 else
     snakemake \
 	--jobs ${LOCAL_CORES} \
 	--scheduler greedy \
 	--use-conda \
-  --restart-times 2 \
+  --conda-frontend mamba \
 	${SNAKEMAKE_ARGS}
 fi

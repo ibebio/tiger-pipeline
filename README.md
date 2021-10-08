@@ -39,11 +39,17 @@ $ chmod u+x workflow/scripts/*.*
 ```
 
 ### Step 3: Install Snakemake
+Install Snakemake using [mamba](https://github.com/mamba-org/mamba):
 
-Install Snakemake using [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html):
+	mamba create -c bioconda -c conda-forge -n snakemake snakemake">="5.21.0 python">="3.7
 
-	conda create -c bioconda -c conda-forge -n snakemake snakemake">="5.21.0 python">="3.7
-	
+Mamba is an alternative package manager for the conda ecosystem with a much
+more reliable dependency resolution and better speed.
+
+In case you have conda available, but not mamba, run 
+
+  conda install -n base -c conda-forge mamba
+
 For installation details, see the [instructions in the Snakemake documentation](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
 
@@ -61,7 +67,7 @@ cp -r sge ~/.config/snakemake/
 
 Activate the conda environment:
 
-    conda activate snakemake
+    mamba activate snakemake
 
 Test your configuration by performing a dry-run via
 
@@ -151,7 +157,7 @@ Whenever you want to synchronize your workflow copy with bugfixes or new develop
 
 1. At the very least, your config files will be different, compared to the example ones from upstream. Therefore, they need to be secured before obtaining the upstream copy: `git stash`
 2. Obtain the updates from the Github repository: `git pull`
-3. Restore your modifications to the config files: `git stash pop`
+3. Restore your modifications to the config files: `gut stash pop`
 
 The above steps assume that you did not modify any parts of the workflow, except the config files. If the config format has changed, you might need to update them.
 
