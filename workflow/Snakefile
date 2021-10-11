@@ -6,7 +6,7 @@
 # report: "report/workflow.rst"
 
 # Allow users to fix the underlying OS via singularity.
-singularity: "docker://continuumio/miniconda3"
+container: "docker://continuumio/miniconda3"
 
 localrules: all
 
@@ -30,7 +30,10 @@ rule all:
                crossing_id=[c["id"] for c in config["crossings"]]),
         expand("results/plots/{crossing_id}.done",
                crossing_id=[c["id"] for c in config["crossings"]]),
-        "results/report/qc.html"
+        "results/report/qc.html",
+        expand("results/variants/f2/filtered/{crossing_id}.biallelic-snps.vcf",
+               crossing_id=[c["id"] for c in config["crossings"]]
+               if config['debug']['call_variants_f2']['create_vcf_for_f2'] == 'yes' else [])
 
         
 
