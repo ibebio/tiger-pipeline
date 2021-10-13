@@ -17,14 +17,14 @@ rule extract_biallelic_snps_parental_complete:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 36 * attempt
     log:
         "results/logs/extract_biallelic_snps_parental_complete/{parental_sample}.log"
     conda:
         "../envs/gatk4.yaml"
     shell:
         """
-        gatk SelectVariants \
+        gatk --java-options "{params.java_options}" SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
              --exclude-filtered \
@@ -75,14 +75,14 @@ rule extract_biallelic_snps_parental_corrected:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 36 * attempt
     log:
         "results/logs/extract_biallelic_snps/{parental_sample}.log"
     conda:
         "../envs/gatk4.yaml"
     shell:
         """
-        gatk SelectVariants \
+        gatk --java-options "{params.java_options}" SelectVariants \
              -R {params.index} \
              -V {input.vcf} \
              --exclude-filtered \

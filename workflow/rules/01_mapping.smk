@@ -98,7 +98,7 @@ rule remove_duplicates:
         metrics="results/qc/rmdup/{sample}.metrics.txt"
     resources:
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 18 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 24 * attempt,
     log:
         "results/logs/remove_duplicates/{sample}.log"
     conda:
@@ -124,7 +124,7 @@ rule qc_bam_qualimap:
         qc_genome_results="results/qc/qualimap/{sample}/genome_results.txt",
     resources:
         time=lambda wildcards, attempt: 1 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 32 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 38 * attempt,
     log:
         "results/logs/qc_bam_qualimap/{sample}.log"
     conda:

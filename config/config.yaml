@@ -55,7 +55,7 @@ read_trimming:
 ## GATK options for parental variant calling/filtering parameters, no need to change this normally
 gatk_options:
   threads: 10
-  java_options: "-Xmx24g -Xms24g"
+  java_options: "-Xmx24g -Xms8g"
 
   
 ## Hard variant filtering parameters

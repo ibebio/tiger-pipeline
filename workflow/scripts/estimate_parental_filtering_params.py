@@ -9,15 +9,24 @@ def main(args):
     import os
     import numpy as np
     import allel
+    import matplotlib
+    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from scipy.optimize import curve_fit
 
-    def read_vcfs(vcf_list, fields):
+    def read_vcfs(vcf_list, fields, remove_nans=True):
         callset = {f: np.array([],dtype='float32') for f in fields }
         for vcf in vcf_list:
             current_callset = allel.read_vcf(vcf, fields=fields)
             for f in fields:
                 callset[f] = np.append(callset[f], current_callset[f])
+
+        # Remove nan's
+        # Fix for error 'ValueError: max must be larger than min in range parameter.'
+        # when plotting the QD hist. Did not dig into details as to why there are nan's at all.
+        if remove_nans:
+            for f in fields:
+                callset[f] = callset[f][~np.isnan(callset[f])]
         return callset
         
     
@@ -50,11 +59,9 @@ def main(args):
         return cutoff
                 
 
-
+    fields = ['variants/QD', 'variants/FS', 'variants/MQ', 'variants/MQRankSum', 'variants/ReadPosRankSum']
     
-    callset = read_vcfs(args.vcf, fields=['variants/QD', 'variants/FS', \
-                                          'variants/MQ', 'variants/MQRankSum', \
-                                          'variants/ReadPosRankSum'])
+    callset = read_vcfs(args.vcf, fields=fields)
 
     # QD
     out = plt.hist(callset['variants/QD'], bins=100, label='QD')
