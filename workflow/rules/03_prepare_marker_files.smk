@@ -252,17 +252,57 @@ rule create_corrected_markers:
         """
 
         
-# Copy the complete reference marker either from parent a or b, depending on config
-rule copy_complete_marker_and_vcf_ref:
+# # Copy the complete reference marker either from parent a or b, depending on config
+# rule copy_complete_marker_and_vcf_ref:
+#     input:
+#         marker_file_complete_a=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+#         marker_file_complete_b=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+#         marker_complete_vcf_a=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+#         marker_complete_vcf_b=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_b}.vcf".format(parent_b=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+#         ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt"
+#     output:
+#         marker_file_complete_ref="results/markers/complete/{crossing_id}.SNP.biallelic.complete.txt",
+#         marker_complete_vcf_ref="results/variants/parental/biallelic_snps_complete/ref.{crossing_id}.vcf"
+#     params:
+#         parent_a=lambda wildcards: [c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
+#         parent_b=lambda wildcards: [c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
+#     threads: 1
+#     resources:
+#         n=1,
+#         time=lambda wildcards, attempt: 12 * 59 * attempt,
+#         mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+#     log:
+#         "results/logs/copy_complete_marker_ref/{crossing_id}.log"
+#     conda:
+#         "../envs/global.yaml"
+#     shell:
+#         """
+#         REF_PARENT=$(cat {input.ref_parent}) ;\
+#         if [[ "$REF_PARENT" == "{params.parent_a}" ]] ; then \
+#            cp {input.marker_file_complete_a} {output.marker_file_complete_ref} ;\
+#            cp {input.marker_complete_vcf_a} {output.marker_complete_vcf_ref} ;\
+#         elif
+#            [[ "$REF_PARENT" == "{params.parent_b}" ]] ; then \
+#            cp {input.marker_file_complete_b} {output.marker_file_complete_ref} ;\
+#            cp {input.marker_complete_vcf_b} {output.marker_complete_vcf_ref} ;\
+#         else \
+#            echo "ERROR: Ref parent is neither one from config a or b." > {log} ;\
+#            echo 'This should not happen (TM). Exiting!' > {log} ;\
+#            exit 1 ; \
+#         fi
+#         """
+
+# Copy the complete source marker either from parent a or b, depending on config
+rule copy_complete_marker_and_vcf_src:
     input:
         marker_file_complete_a=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         marker_file_complete_b=lambda wildcards: "results/markers/complete/{parental_sample}.SNP.biallelic.complete.txt".format(parental_sample=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         marker_complete_vcf_a=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_a}.vcf".format(parent_a=[c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
         marker_complete_vcf_b=lambda wildcards: "results/variants/parental/biallelic_snps_complete/{parent_b}.vcf".format(parent_b=[c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
-        ref_parent="results/variants/parental/{crossing_id}.ref_parent.txt"
+        src_parent="results/variants/parental/{crossing_id}.src_parent.txt"
     output:
-        marker_file_complete_ref="results/markers/complete/{crossing_id}.SNP.biallelic.complete.txt",
-        marker_complete_vcf_ref="results/variants/parental/biallelic_snps_complete/ref.{crossing_id}.vcf"
+        marker_file_complete_src="results/markers/complete/{crossing_id}.SNP.biallelic.complete.txt",
+        marker_complete_vcf_src="results/variants/parental/biallelic_snps_complete/src.{crossing_id}.vcf"
     params:
         parent_a=lambda wildcards: [c["parent_a"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
         parent_b=lambda wildcards: [c["parent_b"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0],
@@ -272,21 +312,21 @@ rule copy_complete_marker_and_vcf_ref:
         time=lambda wildcards, attempt: 12 * 59 * attempt,
         mem_gb_pt=lambda wildcards, attempt: 12 * attempt
     log:
-        "results/logs/copy_complete_marker_ref/{crossing_id}.log"
+        "results/logs/copy_complete_marker_src/{crossing_id}.log"
     conda:
         "../envs/global.yaml"
     shell:
         """
-        REF_PARENT=$(cat {input.ref_parent}) ;\
-        if [[ "$REF_PARENT" == "{params.parent_a}" ]] ; then \
-           cp {input.marker_file_complete_a} {output.marker_file_complete_ref} ;\
-           cp {input.marker_complete_vcf_a} {output.marker_complete_vcf_ref} ;\
+        SRC_PARENT=$(cat {input.src_parent}) ;\
+        if [[ "$SRC_PARENT" == "{params.parent_a}" ]] ; then \
+           cp {input.marker_file_complete_a} {output.marker_file_complete_src} ;\
+           cp {input.marker_complete_vcf_a} {output.marker_complete_vcf_src} ;\
         elif
-           [[ "$REF_PARENT" == "{params.parent_b}" ]] ; then \
-           cp {input.marker_file_complete_b} {output.marker_file_complete_ref} ;\
-           cp {input.marker_complete_vcf_b} {output.marker_complete_vcf_ref} ;\
+           [[ "$SRC_PARENT" == "{params.parent_b}" ]] ; then \
+           cp {input.marker_file_complete_b} {output.marker_file_complete_src} ;\
+           cp {input.marker_complete_vcf_b} {output.marker_complete_vcf_src} ;\
         else \
-           echo "ERROR: Ref parent is neither one from config a or b." > {log} ;\
+           echo "ERROR: Src parent is neither one from config a or b." > {log} ;\
            echo 'This should not happen (TM). Exiting!' > {log} ;\
            exit 1 ; \
         fi

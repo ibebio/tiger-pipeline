@@ -1,7 +1,7 @@
 rule collect_allelic_counts_f2:
     input:
         bam="results/rmdup/{f2_sample}.rmdup.bam",
-        marker_complete_ref_vcf="results/variants/parental/biallelic_snps_complete/ref.{crossing_id}.vcf"
+        marker_complete_src_vcf="results/variants/parental/biallelic_snps_complete/src.{crossing_id}.vcf"
     output:
         tab="results/tiger_analysis/F2.{crossing_id}/tab/{f2_sample}.raw.tsv"
     params:
@@ -20,7 +20,7 @@ rule collect_allelic_counts_f2:
         gatk --java-options "{params.java_options}" CollectAllelicCounts \
             -R {params.index} \
             -I {input.bam} \
-            -L {input.marker_complete_ref_vcf} \
+            -L {input.marker_complete_src_vcf} \
             -O {output.tab} 2> {log}
         """
 
