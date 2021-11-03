@@ -61,6 +61,7 @@ if config['debug']['call_variants_f2']['create_vcf_for_f2'] == 'yes':
             bam="results/rmdup/{f2_sample_vc}.rmdup.bam"
         output:
             gvcf=temp("results/variants/f2/gvcf/{crossing_id}.{f2_sample_vc}.g.vcf.gz"),
+            gvcf_idx=temp("results/variants/f2/gvcf/{crossing_id}.{f2_sample_vc}.g.vcf.gz.tbi"),
         params:
             index=config["ref"]["genome"],
             java_options=config["gatk_options"]["java_options"],
@@ -86,10 +87,13 @@ if config['debug']['call_variants_f2']['create_vcf_for_f2'] == 'yes':
     rule dbg_combine_calls_f2:
         input:
             gvcfs=lambda wildcards: expand("results/variants/f2/gvcf/{{crossing_id}}.{f2_sample_vc}.g.vcf.gz",
-                f2_sample_vc=[c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0])
+                f2_sample_vc=[c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0]),
+            gvcfs_idx=lambda wildcards: expand("results/variants/f2/gvcf/{{crossing_id}}.{f2_sample_vc}.g.vcf.gz.tbi",
+        f2_sample_vc=[c["f2_samples"] for c in config["crossings"] if c["id"] == wildcards.crossing_id][0])
 
         output:
             gvcf=temp("results/variants/f2/gvcf/{crossing_id}.g.vcf.gz"),
+            gvcf_idx=temp("results/variants/f2/gvcf/{crossing_id}.g.vcf.gz.tbi"),
         params:
             index=config["ref"]["genome"],
             java_options=config["gatk_options"]["java_options"],
@@ -114,6 +118,7 @@ if config['debug']['call_variants_f2']['create_vcf_for_f2'] == 'yes':
     rule dbg_genotype_variants_f2:
         input:
             gvcf="results/variants/f2/gvcf/{crossing_id}.g.vcf.gz",
+            gvcf_idx=temp("results/variants/f2/gvcf/{crossing_id}.g.vcf.gz.tbi"),
         output:
             vcf="results/variants/raw/{crossing_id}.vcf.gz",
         params:
