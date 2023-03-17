@@ -12,6 +12,7 @@ configfile: "config/config.yaml"
 # validate(config, schema="../schemas/config.schema.yaml")
 
 samples = pd.read_csv(config["samples"], sep="\t|;|,").set_index("sample", drop=False)
+samples = samples.drop_duplicates()
 samples.index.names = ["sample_id"]
 # validate(samples, schema="../schemas/samples.schema.yaml")
 
