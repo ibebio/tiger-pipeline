@@ -45,7 +45,7 @@ fi
 
 # Unzip the reference and index files, if it is the first time the pipeline is run
 cd resources
-for ${FILE} in *.fa*.gz ; do
+for FILE in *.fa*.gz ; do
     echo "unzipping ${FILE}"
     gunzip ${FILE}
 done
