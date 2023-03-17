@@ -30,6 +30,9 @@ git clone --recursive https://github.com/ibebio/tiger-pipeline.git
 ```
 
 ### Step 2: Configure workflow
+Change to the freshly cloned pipeline directory
+       
+       cd tiger-pipeline
 
 Configure the workflow according to your needs via editing the files in the `config/` folder. Adjust `config.yaml` to configure the workflow execution, and `samples.csv` to specify your sample setup.
 
@@ -64,7 +67,7 @@ mkdir -p ~/.config/snakemake/
 chmod u+x sge/*.py
 cp -r sge ~/.config/snakemake/
 ```
-
+    
 Activate the conda environment:
 
     mamba activate snakemake
