@@ -3,34 +3,39 @@
 # FOR _ALL_ SAMPLES INVOLVED, PARENTAL AND F2
 ############################################################
 
-localrules: map_all
+localrules: map_all,remove_duplicates
 
 # Trim reads (PE-only)
 rule trim_reads:
+    priority: 10
     input:
         unpack(get_fastq) # TODO ALL FASTQ'S, parental and f2
     output:
         fq1=temp("results/trimmed/{sample}.R1.trimmed.fastq.gz"),
         fq2=temp("results/trimmed/{sample}.R2.trimmed.fastq.gz"),
     params:
-        adapter=config["read_trimming"]["adapter"]
-    threads: 1
+        output_dir="results/trimmed",
+        basename="{sample}"
+    threads: 4
     resources:
-        n=1,
+        n=4,
         time=lambda wildcards, attempt: 2 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 24 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 6 * attempt,
     log:
         "results/logs/trim_reads/{sample}.log"
     conda:
         "../envs/trim_reads.yaml"
     shell:
         """
-        cutadapt \
-        -a {params.adapter} \
-        -o {output.fq1} \
-        -p {output.fq2} \
-        {input}
-        2> {log}
+        trim_galore \
+        --cores {threads} \
+        --gzip \
+        --paired \
+        --output_dir {params.output_dir} \
+        --basename {params.basename} \
+        {input} 2> {log} ; \
+        mv {params.output_dir}/{params.basename}_val_1.fq.gz {output.fq1} ; \
+        mv {params.output_dir}/{params.basename}_val_2.fq.gz {output.fq2}
         """
 
 #(bio36) ibezrukov2@taco:/ebio/abt6_projects9/At_dFLC/data/dFLC_F2mapping_AS$ fastqc -o ~/fastq_test/ p9925-WT-001.merged2.R1.fastq.gz
@@ -64,6 +69,7 @@ rule qc_trim_reads:
 
 # Align to reference
 rule map_to_reference:
+    priority: 9
     input:
         fq1="results/trimmed/{sample}.R1.trimmed.fastq.gz",
         fq2="results/trimmed/{sample}.R2.trimmed.fastq.gz",
@@ -91,14 +97,16 @@ rule map_to_reference:
 
 
 rule remove_duplicates:
+    priority: 8
     input:
         "results/mapped/{sample}.sorted.bam"
     output:
         bam="results/rmdup/{sample}.rmdup.bam",
         metrics="results/qc/rmdup/{sample}.metrics.txt"
+    threads: 2
     resources:
-        time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 24 * attempt,
+        time=lambda wildcards, attempt: 3 * 59 * attempt,
+        mem_gb_pt=lambda wildcards, attempt: 32 * attempt,
     log:
         "results/logs/remove_duplicates/{sample}.log"
     conda:
