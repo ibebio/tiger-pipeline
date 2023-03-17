@@ -42,6 +42,15 @@ if [[ ! -d ${PIPELINE_DIR}/conda/ ]] ; then
       --conda-frontend mamba
 fi
 
+
+# Unzip the reference and index files, if it is the first time the pipeline is run
+cd resources
+for ${FILE} in *.fa*.gz ; do
+    echo "unzipping ${FILE}"
+    gunzip ${FILE}
+done
+cd ..
+
 # Run the workflow
 if [[ "${SNAKEMAKE_PROFILE}" == "sge" ]] ; then
     snakemake \

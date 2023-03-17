@@ -1,0 +1,15 @@
+119667750 7 11
+0 1 dna:chromosome chromosome:TAIR10:1:1:30427671:1 REF
+0 30427671 363
+0 2 dna:chromosome chromosome:TAIR10:2:1:19698289:1 REF
+30427671 19698289 58
+0 3 dna:chromosome chromosome:TAIR10:3:1:23459830:1 REF
+50125960 23459830 87
+0 4 dna:chromosome chromosome:TAIR10:4:1:18585056:1 REF
+73585790 18585056 8
+0 5 dna:chromosome chromosome:TAIR10:5:1:26975502:1 REF
+92170846 26975502 47
+0 Mt dna:chromosome chromosome:TAIR10:Mt:1:366924:1 REF
+119146348 366924 0
+0 Pt dna:chromosome chromosome:TAIR10:Pt:1:154478:1 REF
+119513272 154478 0

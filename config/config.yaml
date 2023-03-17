@@ -44,12 +44,7 @@ read_group:
 ## Reference genome
 ref:
   name: "TAIR-10"
-  genome: "/ebio/abt6_projects8/ath_somaclonal_variation/data/reference_genomes/Col-0/TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
-
-
-## Trimming parameters
-read_trimming:
-  adapter: "CTGTCTCTTATA" # NEXTERA, change as required
+  genome: "resources/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
 
   
 ## GATK options for parental variant calling/filtering parameters, no need to change this normally
@@ -97,7 +92,7 @@ debug:
     create_vcf_for_f2: "yes"
     ref:
       name: "TAIR-10"
-      genome: "/ebio/abt6_projects8/ath_somaclonal_variation/data/reference_genomes/Col-0/TAIR10/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
+      genome: "resources/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa"
     variant_filtering:
        snps_filter: "QD < 5.0 || FS > 60.0 || MQ < 50.0 || MQRankSum < -12.5 || ReadPosRankSum < -8.0"
        indels_filter: "QD < 5.0 || FS > 200.0 || ReadPosRankSum < -20.0"
