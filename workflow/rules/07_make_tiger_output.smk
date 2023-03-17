@@ -75,7 +75,8 @@ rule tiger_create_rqtl_input:
         env python workflow/scripts/tiger_to_rqtl.py \
            --samples_file {input.breaks_summary} \
            --chrom_size_file {params.tiger_chrom_size_file} \
-           --output {output.rqtl_csv} 2> {log}
+           --output {output.rqtl_csv} \
+           --fix_genotypes_flip 2> {log}
         """
 
 

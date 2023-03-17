@@ -116,6 +116,11 @@ def main(args):
 
     # In[146]:
 
+    # Fix for TIGER output where H and B are exchanged for chromosomes 1-4?
+    if args.fix_genotypes_flip:
+        for (columnName, columnData) in genotypes.iteritems():
+            if columnData[0].split(':')[0] in ['1','2','3','4']:
+                genotypes.replace({columnName: {'B': 'H', 'H': 'B'}}, inplace=True)
 
     genotypes.to_csv(args.output, header=False)
 
@@ -154,6 +159,13 @@ if __name__ == '__main__':
         default=None,
         required=True
     )
+    parser.add_argument(
+        "--fix_genotypes_flip",
+        help="Exchange the B and H genotypes in chromosomes 1-4 to fix the TIGER output.",
+        action="store_true"
+    )
 
+    # TODO add parameter for hacky fix for genotype flip
+    
     args = parser.parse_args()
     main(args)
