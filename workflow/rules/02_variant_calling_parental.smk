@@ -133,7 +133,7 @@ rule filter_variants_parental_corrected:
     resources:
         n=1,
         time=lambda wildcards, attempt: 12 * 59 * attempt,
-        mem_gb_pt=lambda wildcards, attempt: 12 * attempt
+        mem_gb_pt=lambda wildcards, attempt: 24 * attempt
     log:
         "results/logs/filter_variants_parental_corrected/{parental_sample}.log"
     conda:
