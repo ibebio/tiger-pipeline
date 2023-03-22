@@ -49,6 +49,10 @@ for FILE in *.fa*.gz ; do
     echo "unzipping ${FILE}"
     gunzip ${FILE}
 done
+# Create symbolic link for .dict index file
+if [[ ! -f Arabidopsis_thaliana.TAIR10.dna.toplevel.dict ]] ; then
+   ln -s Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.dict Arabidopsis_thaliana.TAIR10.dna.toplevel.dict
+fi
 cd ..
 
 # Run the workflow
