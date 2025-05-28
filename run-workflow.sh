@@ -35,20 +35,24 @@ PIPELINE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Create environments first, since there is no internet
 # connectivity on the cluster nodes
-if [[ ! -d ${PIPELINE_DIR}/conda/ ]] ; then
+if [[ ! -d ${PIPELINE_DIR}/.snakemake/conda/ ]] ; then
     snakemake --use-conda \
       --conda-create-envs-only \
       --cores 4 \
       --conda-frontend mamba
 fi
 
-
 # Unzip the reference and index files, if it is the first time the pipeline is run
 cd resources
-for FILE in *.fa*.gz ; do
+shopt -s nullglob
+FILES=( *.fa*.gz )
+if (( ${#FILES[@]} )); then
+  for FILE in "${FILES[@]}" ; do
     echo "unzipping ${FILE}"
-    gunzip ${FILE}
-done
+    gunzip "${FILE}"
+  done
+fi
+shopt -u nullglob
 # Create symbolic link for .dict index file
 if [[ ! -f Arabidopsis_thaliana.TAIR10.dna.toplevel.dict ]] ; then
    ln -s Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.dict Arabidopsis_thaliana.TAIR10.dna.toplevel.dict
