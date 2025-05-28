@@ -106,7 +106,8 @@ rule estimate_filtering_params_parental_corrected:
         # Prepare input args
         INPUTARGS=$(echo " {input.vcf}" | sed 's/ / --vcf /g')
         # Estimate filtering parameters
-        env python workflow/scripts/estimate_parental_filtering_params.py \
+	# Workaround for https://github.com/cggh/scikit-allel/issues/285
+	NUMEXPR_MAX_THREADS=2048 env python workflow/scripts/estimate_parental_filtering_params.py \
             $INPUTARGS \
             --filter_file {output.filter_file} \
             --plot {output.plots_temp_directory}/{params.plot_prefix} 2> {log}
@@ -116,7 +117,7 @@ rule estimate_filtering_params_parental_corrected:
           echo "{params.snp_indel_filter}" > {output.filter_file}
         fi
 
-        montage {output.plots_temp_directory}/{params.plot_prefix}*.png -geometry +0+0 -title "$(cat {output.filter_file})" {output.plot} 2>> {log}
+        montage {output.plots_temp_directory}/{params.plot_prefix}*.png -font DejaVu-Sans -geometry +0+0 -title "$(cat {output.filter_file})" {output.plot} 2>> {log}
         # rm {params.plot_prefix}*.png
         """
 
