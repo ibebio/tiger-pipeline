@@ -15,10 +15,10 @@
 If you use this workflow in a paper, don't forget to give credits to the authors of this pipeline and the authors of the 'GBS with sparse coverage using Trained Individual
 GenomE Reconstruction (TIGER)' workflow: https://www.g3journal.org/content/5/3/385.short
 ### Step 1: Obtain a copy of this workflow
-Clone the repository into the place where you want to perform the data analysis. It is important to include the submodules:
-```
-git clone --recursive https://github.com/ibebio/tiger-pipeline.git
-```
+Clone the repository into the place where you want to perform the data analysis.
+For convenience, and reproducibility, the original TIGER scripts with small bugfixes from the paper of Rowan et al are included.
+
+For reference, the original forked repository of the TIGER scripts with the fixes can be found at (https://github.com/ibebio/TIGER_Scripts-for-distribution)
 
 ### Step 2: Configure workflow
 Change to the freshly cloned pipeline directory
